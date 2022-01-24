@@ -21,3 +21,14 @@ export function calculate(score: number, musicRate: number, level: number) {
 
 	return level * 12.5 * (musicRate / 99);
 }
+
+/**
+ * Given a jubility, return the musicRate necessary to get that jubility.
+ * This assumes that the player has a score >= 700k.
+ *
+ * @param jubility - The jubility to inversely calculate.
+ * @param level - The level for the chart.
+ */
+export function inverse(jubility: number, level: number) {
+	return (99 / (12.5 * level)) * jubility;
+}
