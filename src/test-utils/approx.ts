@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 /**
- * Is approximately tester.
+ * Tests whether a number is approximately equal to another number.
  */
 export function isAprx(
 	t: Tap.Test,
