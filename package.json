@@ -20,7 +20,7 @@
 		]
 	},
 	"dependencies": {},
-	"name": "rhythm-game-stats",
+	"name": "rg-stats",
 	"version": "1.0.0",
 	"description": "Functions for calculating statistics in rhythm games.",
 	"main": "js/main.js",
