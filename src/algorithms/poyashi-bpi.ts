@@ -59,16 +59,6 @@ export function CalculateBPI(
 
 	const isWorseThanKavg = yourEx < kaidenAverage;
 
-	if (yourEx === kaidenAverage) {
-		// by definition, kaidenEx == 0. Note that the algorithm below also
-		// evaluates for 0 for this case, but this is a helpful optimisation.
-		return 0;
-	} else if (yourEx === worldRecord) {
-		// Same as above, by definition wr == 100. The algorithm gets this right,
-		// but this is an optimisation.
-		return 100;
-	}
-
 	const logExPrime = LogToBase(yourScorePrime, wrScorePrime);
 
 	if (isWorseThanKavg) {
@@ -142,15 +132,7 @@ export function InverseCalculateBPI(
 
 	AssertProvidedEXScores(kaidenAverage, worldRecord, max, powCoef);
 
-	ThrowIf(bpi < -15, "BPI must be greater than -15.", { bpi });
-
-	if (bpi === 0) {
-		return kaidenAverage;
-	} else if (bpi === 100) {
-		return worldRecord;
-	} else if (bpi <= -15) {
-		return 0;
-	}
+	ThrowIf(bpi < -15, "BPI must be greater than or equal to -15.", { bpi });
 
 	const isWorseThanKavg = bpi < 0;
 
