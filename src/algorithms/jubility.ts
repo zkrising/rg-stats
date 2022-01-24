@@ -19,6 +19,7 @@ export function calculate(score: number, musicRate: number, level: number) {
 		return 0;
 	}
 
+	// Note: These constants are arbitrary. I have no idea why they're like this.
 	return level * 12.5 * (musicRate / 99);
 }
 
