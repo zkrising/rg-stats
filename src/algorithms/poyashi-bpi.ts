@@ -113,7 +113,8 @@ function PikaGreatFunction(score: integer, max: integer) {
  * @returns A number between 0 and `max`.
  *
  * @edgecase -15BPI is achievable by many possible EXs, since it is the lower bound
- * for any given chart. Passing -15 into the function will always return 0.
+ * for any given chart. Passing -15 into the function will return the largest
+ * possible exScore that results in -15BPI.
  *
  * @see {PikaGreatFunction}
  * @see {CalculateBPI}

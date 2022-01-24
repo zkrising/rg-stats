@@ -54,7 +54,7 @@ Invalid input, Provided EX was not an integer. yourEx=15.5.
 `
 
 exports[`src/algorithms/poyashi-bpi.test.ts TAP InverseBPI Validation Tests > BPI less than -15 should throw an error. 1`] = `
-Invalid input, BPI must be greater than -15. bpi=-16.
+Invalid input, BPI must be greater than or equal to -15. bpi=-16.
 `
 
 exports[`src/algorithms/poyashi-bpi.test.ts TAP InverseBPI Validation Tests > Should throw if KAVG == WR 1`] = `
