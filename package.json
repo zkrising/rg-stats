@@ -21,7 +21,7 @@
 	},
 	"dependencies": {},
 	"name": "rg-stats",
-	"version": "1.0.0",
+	"version": "0.1.0-prerelease",
 	"description": "Functions for calculating statistics in rhythm games.",
 	"main": "js/main.js",
 	"scripts": {
