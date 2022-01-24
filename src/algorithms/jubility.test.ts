@@ -279,6 +279,8 @@ t.test("Jubility Tests", (t) => {
 		MakeTestCase(testCase[0], testCase[1], testCase[2])(t);
 	}
 
+	t.equal(calculate(699_999, 100, 10), 0, "Should return 0 for scores < 700k no matter what.");
+
 	t.end();
 });
 
