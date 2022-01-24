@@ -16,7 +16,7 @@ pnpm add rg-stats
 
 ## API
 
-The API is fully documented here. (todo)
+I haven't wrote documentation yet. I probably should.
 
 ## Development Info
 
