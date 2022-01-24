@@ -123,9 +123,6 @@ function PikaGreatFunction(score: integer, max: integer) {
  * @edgecase -15BPI is achievable by many possible EXs, since it is the lower bound
  * for any given chart. Passing -15 into the function will always return 0.
  *
- * @edgecase Accuracy may be lost for BPI > 100.
- * The returned values may be off by a single EX for large BPI values (> 200).
- *
  * @see {PikaGreatFunction}
  * @see {CalculateBPI}
  */
