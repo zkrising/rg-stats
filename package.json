@@ -22,7 +22,7 @@
 	"dependencies": {},
 	"name": "rg-stats",
 	"version": "0.1.0-prerelease",
-	"description": "Functions for calculating statistics in rhythm games.",
+	"description": "A library for calculating various rhythm game stats.",
 	"main": "js/main.js",
 	"scripts": {
 		"test": "tap",
@@ -33,7 +33,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/tng-dev/rhythm-game-stats.git"
+		"url": "git+httpas://github.com/TNG-dev/rg-stats.git"
 	},
 	"keywords": [
 		"rhythm",
@@ -44,7 +44,7 @@
 	"author": "zkldi",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/tng-dev/rhythm-game-stats/issues"
+		"url": "https://github.com/TNG-dev/rg-stats/issues"
 	},
-	"homepage": "https://github.com/tng-dev/rhythm-game-stats#readme"
+	"homepage": "https://github.com/TNG-dev/rg-stats#readme"
 }
