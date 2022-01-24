@@ -63,20 +63,24 @@ export function CalculateBPI(
 
 	if (isWorseThanKavg) {
 		// since logExPrime is negative (because yourScorePrime is between 0 and 1)
-		// We can't raise it to a power.
+		// We can't raise it to a power natively, as -0.5 to the power of something
+		// like 1.175 is imaginary.
 
-		// The poyashi implementation then negates this value, raises it to the coefficient
-		// and then negates it again.
-		const bpi = 100 * -1 * (-1 * logExPrime) ** powCoef;
+		// To fix this, the poyashi implementation negates logExPrime
+		// and raises it to the powCoef.
+		const negativeRaisedValue = (-1 * logExPrime) ** powCoef;
+
+		// and then negates it again when multiplying by 100.
+		const bpi = 100 * -1 * negativeRaisedValue;
 
 		if (bpi < -15) {
 			return -15;
 		}
 
 		return bpi;
+	} else {
+		return 100 * logExPrime ** powCoef;
 	}
-
-	return 100 * logExPrime ** powCoef;
 }
 
 /**
@@ -87,11 +91,9 @@ function PikaGreatFunction(score: integer, max: integer) {
 	// if score === max, then the subsequent lines will involve a divide by zero
 	// so we have to avoid that somehow.
 	if (score === max) {
-		// the poyashi implementation multiplies by 0.8 here for seemingly no reason
-		// This can result in a case where score being just slightly below max
-		// results in a better PGF (and therefore BPI) than having max.
+		// The poyashi implementation multiplies by 0.8 here for an unknown reason.
 		//
-		// This statement essentially asserts that on a perfect score on a chart with
+		// This multiplication essentially asserts that on a perfect score on a chart with
 		// 1000 notes, it expects every 1600(!!) notes you make a mistake.
 		return max * 0.8;
 	}
@@ -205,13 +207,15 @@ function AssertProvidedEXScores(
 		kaidenAverage,
 		worldRecord,
 	});
-	ThrowIf.negative(kaidenAverage, "Kaiden Average was negative.", { kaidenAverage });
-	ThrowIf.negative(max, "MAX was negative.", { max });
-	ThrowIf.negative(powCoef, "Power Coefficient was negative.", { powCoef });
+	ThrowIf.negativeOrZero(kaidenAverage, "Kaiden Average was negative or zero.", {
+		kaidenAverage,
+	});
+	ThrowIf.negativeOrZero(max, "MAX was negative or zero.", { max });
+	ThrowIf.negativeOrZero(powCoef, "Power Coefficient was not positive.", { powCoef });
 
 	// This assertion never triggers, because WR has to be greater than KAVG, and KAVG
 	// is non-negative.
-	// ThrowIf.negative(worldRecord, "World Record was negative.", { worldRecord });
+	// ThrowIf.negativeOrZero(worldRecord, "World Record was negative or zero.", { worldRecord });
 
 	// Other edge case -- WR == KAVG breaks BPI immediately.
 	ThrowIf(

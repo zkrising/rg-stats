@@ -258,6 +258,25 @@ t.test("InverseBPI Validation Tests", (t) => {
 		() => InverseCalculateBPI(100, 100, 110, -1, null),
 		"Should throw if MAX is negative."
 	);
+
+	ThrowsToSnapshot(
+		t,
+		() => InverseCalculateBPI(100, 0, 110, 120, null),
+		"Should throw if Kaiden Average is 0."
+	);
+	// note: this is the same test as WR < KAVG. If KAVG is negative, the above
+	// suite fails first.
+	ThrowsToSnapshot(
+		t,
+		() => InverseCalculateBPI(100, 100, 0, 120, null),
+		"Should throw if WR is 0."
+	);
+	ThrowsToSnapshot(
+		t,
+		() => InverseCalculateBPI(100, 100, 110, 0, null),
+		"Should throw if MAX is 0."
+	);
+
 	ThrowsToSnapshot(
 		t,
 		() => InverseCalculateBPI(100, 100, 130, 120, null),

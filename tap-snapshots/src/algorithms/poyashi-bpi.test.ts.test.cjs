@@ -18,7 +18,7 @@ Invalid input, Kaiden Average was not an integer. kaidenAverage=15.5.
 `
 
 exports[`src/algorithms/poyashi-bpi.test.ts TAP BPI Validation Tests > Should throw if Kaiden Average is negative. 1`] = `
-Invalid input, Kaiden Average was negative. kaidenAverage=-1.
+Invalid input, Kaiden Average was negative or zero. kaidenAverage=-1.
 `
 
 exports[`src/algorithms/poyashi-bpi.test.ts TAP BPI Validation Tests > Should throw if MAX is negative. 1`] = `
@@ -69,8 +69,16 @@ exports[`src/algorithms/poyashi-bpi.test.ts TAP InverseBPI Validation Tests > Sh
 Invalid input, Kaiden Average was not an integer. kaidenAverage=15.5.
 `
 
+exports[`src/algorithms/poyashi-bpi.test.ts TAP InverseBPI Validation Tests > Should throw if Kaiden Average is 0. 1`] = `
+Invalid input, Kaiden Average was negative or zero. kaidenAverage=0.
+`
+
 exports[`src/algorithms/poyashi-bpi.test.ts TAP InverseBPI Validation Tests > Should throw if Kaiden Average is negative. 1`] = `
-Invalid input, Kaiden Average was negative. kaidenAverage=-1.
+Invalid input, Kaiden Average was negative or zero. kaidenAverage=-1.
+`
+
+exports[`src/algorithms/poyashi-bpi.test.ts TAP InverseBPI Validation Tests > Should throw if MAX is 0. 1`] = `
+Invalid input, Kaiden Average was greater than MAX. kaidenAverage=100, max=0.
 `
 
 exports[`src/algorithms/poyashi-bpi.test.ts TAP InverseBPI Validation Tests > Should throw if MAX is negative. 1`] = `
@@ -83,6 +91,10 @@ Invalid input, MAX was not an integer. max=15.5.
 
 exports[`src/algorithms/poyashi-bpi.test.ts TAP InverseBPI Validation Tests > Should throw if WR > MAX 1`] = `
 Invalid input, World Record was greater than MAX. worldRecord=130, max=120.
+`
+
+exports[`src/algorithms/poyashi-bpi.test.ts TAP InverseBPI Validation Tests > Should throw if WR is 0. 1`] = `
+Invalid input, Kaiden Average was greater than WR. kaidenAverage=100, worldRecord=0.
 `
 
 exports[`src/algorithms/poyashi-bpi.test.ts TAP InverseBPI Validation Tests > Should throw if WR is negative. 1`] = `
