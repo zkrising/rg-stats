@@ -25,7 +25,7 @@ import { integer } from "../util/types";
  * @edgecase BPI is undefined for the case where the world record is equal to the
  * kaiden average.
  */
-export function CalculateBPI(
+export function calculate(
 	yourEx: integer,
 	kaidenAverage: integer,
 	worldRecord: integer,
@@ -119,9 +119,9 @@ function PikaGreatFunction(score: integer, max: integer) {
  * possible exScore that results in -15BPI.
  *
  * @see {PikaGreatFunction}
- * @see {CalculateBPI}
+ * @see {calculate}
  */
-export function InverseCalculateBPI(
+export function inverse(
 	bpi: number,
 	kaidenAverage: integer,
 	worldRecord: integer,

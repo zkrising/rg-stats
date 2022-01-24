@@ -1,5 +1,5 @@
 import t from "tap";
-import { CalculateBPI, InverseCalculateBPI } from "./poyashi-bpi";
+import { calculate, inverse } from "./poyashi-bpi";
 import { isAprx } from "../test-utils/approx";
 import { TestCase } from "../test-utils/test-case";
 import { ThrowsToSnapshot } from "../test-utils/throw-snapshot";
@@ -20,7 +20,7 @@ t.test("BPI Tests", (t) => {
 		return (t) =>
 			isAprx(
 				t,
-				CalculateBPI(providedEx, KAVG_AA, WR_AA, MAX_AA, COEF_AA),
+				calculate(providedEx, KAVG_AA, WR_AA, MAX_AA, COEF_AA),
 				expectedBPI,
 				`${providedEx} on AA should be worth ${expectedBPI}.`
 			);
@@ -30,7 +30,7 @@ t.test("BPI Tests", (t) => {
 		return (t) =>
 			isAprx(
 				t,
-				CalculateBPI(providedEx, KAVG_AFT, WR_AFT, MAX_AFT, COEF_AFT),
+				calculate(providedEx, KAVG_AFT, WR_AFT, MAX_AFT, COEF_AFT),
 				expectedBPI,
 				`${providedEx} on Afterimage d'automne should be worth ${expectedBPI}`
 			);
@@ -83,54 +83,54 @@ t.test("BPI Tests", (t) => {
 t.test("BPI Validation Tests", (t) => {
 	ThrowsToSnapshot(
 		t,
-		() => CalculateBPI(-1, 100, 110, 120, null),
+		() => calculate(-1, 100, 110, 120, null),
 		"Should throw if your score is negative."
 	);
 	ThrowsToSnapshot(
 		t,
-		() => CalculateBPI(100, -1, 110, 120, null),
+		() => calculate(100, -1, 110, 120, null),
 		"Should throw if Kaiden Average is negative."
 	);
 	// note: this is the same test as WR < KAVG. If KAVG is negative, the above
 	// suite fails first.
 	ThrowsToSnapshot(
 		t,
-		() => CalculateBPI(100, 100, -1, 120, null),
+		() => calculate(100, 100, -1, 120, null),
 		"Should throw if WR is negative."
 	);
 	ThrowsToSnapshot(
 		t,
-		() => CalculateBPI(100, 100, 110, -1, null),
+		() => calculate(100, 100, 110, -1, null),
 		"Should throw if MAX is negative."
 	);
-	ThrowsToSnapshot(t, () => CalculateBPI(100, 100, 130, 120, null), "Should throw if WR > MAX");
+	ThrowsToSnapshot(t, () => calculate(100, 100, 130, 120, null), "Should throw if WR > MAX");
 	ThrowsToSnapshot(
 		t,
-		() => CalculateBPI(130, 100, 110, 120, null),
+		() => calculate(130, 100, 110, 120, null),
 		"Should throw if your score > MAX"
 	);
-	ThrowsToSnapshot(t, () => CalculateBPI(100, 125, 120, 130, null), "Should throw if KAVG > WR");
-	ThrowsToSnapshot(t, () => CalculateBPI(100, 120, 120, 130, null), "Should throw if KAVG == WR");
+	ThrowsToSnapshot(t, () => calculate(100, 125, 120, 130, null), "Should throw if KAVG > WR");
+	ThrowsToSnapshot(t, () => calculate(100, 120, 120, 130, null), "Should throw if KAVG == WR");
 
 	ThrowsToSnapshot(
 		t,
-		() => CalculateBPI(15.5, 100, 110, 120, null),
+		() => calculate(15.5, 100, 110, 120, null),
 		"Should throw if your score is not an integer."
 	);
 
 	ThrowsToSnapshot(
 		t,
-		() => CalculateBPI(100, 15.5, 110, 120, null),
+		() => calculate(100, 15.5, 110, 120, null),
 		"Should throw if KAVG is not an integer."
 	);
 	ThrowsToSnapshot(
 		t,
-		() => CalculateBPI(100, 100, 15.5, 120, null),
+		() => calculate(100, 100, 15.5, 120, null),
 		"Should throw if WR is not an integer."
 	);
 	ThrowsToSnapshot(
 		t,
-		() => CalculateBPI(100, 100, 110, 15.5, null),
+		() => calculate(100, 100, 110, 15.5, null),
 		"Should throw if MAX is not an integer."
 	);
 
@@ -139,33 +139,33 @@ t.test("BPI Validation Tests", (t) => {
 
 t.test("BPI Edge Cases", (t) => {
 	t.equal(
-		CalculateBPI(1150, 1100, 1200, 1300, 1.175),
-		CalculateBPI(1150, 1100, 1200, 1300, null),
+		calculate(1150, 1100, 1200, 1300, 1.175),
+		calculate(1150, 1100, 1200, 1300, null),
 		"Null as a co-efficient should be identical to 1.175 as a co-efficient"
 	);
 	t.equal(
-		CalculateBPI(1150, 1100, 1200, 1300, 1.175),
-		CalculateBPI(1150, 1100, 1200, 1300, -1),
+		calculate(1150, 1100, 1200, 1300, 1.175),
+		calculate(1150, 1100, 1200, 1300, -1),
 		"-1 as a co-efficient should be identical to 1.175 as a co-efficient"
 	);
 
 	isAprx(
 		t,
-		CalculateBPI(1250, 1100, 1200, 1300, 1.175),
+		calculate(1250, 1100, 1200, 1300, 1.175),
 		225.79,
 		"Provided EX should be allowed to be greater than WR and less than MAX."
 	);
 
 	isAprx(
 		t,
-		CalculateBPI(1300, 1100, 1200, 1300, 1.175),
+		calculate(1300, 1100, 1200, 1300, 1.175),
 		1205.76,
 		"Provided EX should be allowed to be equal to MAX."
 	);
 
 	isAprx(
 		t,
-		CalculateBPI(1200, 1100, 1300, 1300, 1.175),
+		calculate(1200, 1100, 1300, 1300, 1.175),
 		8.29,
 		"WR should be allowed to be equal to MAX."
 	);
@@ -180,7 +180,7 @@ t.test("InverseBPI Tests", (t) => {
 		return (t) =>
 			isAprx(
 				t,
-				InverseCalculateBPI(providedBPI, KAVG_AA, WR_AA, MAX_AA, COEF_AA),
+				inverse(providedBPI, KAVG_AA, WR_AA, MAX_AA, COEF_AA),
 				expectedEx,
 				`Inverse ${providedBPI}BPI on AA should be worth ${expectedEx}`
 			);
@@ -190,7 +190,7 @@ t.test("InverseBPI Tests", (t) => {
 		return (t) =>
 			isAprx(
 				t,
-				InverseCalculateBPI(providedBPI, KAVG_AFT, WR_AFT, MAX_AFT, COEF_AFT),
+				inverse(providedBPI, KAVG_AFT, WR_AFT, MAX_AFT, COEF_AFT),
 				expectedEx,
 				`Inverse ${providedBPI}BPI on Afterimage d'automne should be worth ${expectedEx}`
 			);
@@ -243,75 +243,47 @@ t.test("InverseBPI Tests", (t) => {
 t.test("InverseBPI Validation Tests", (t) => {
 	ThrowsToSnapshot(
 		t,
-		() => InverseCalculateBPI(100, -1, 110, 120, null),
+		() => inverse(100, -1, 110, 120, null),
 		"Should throw if Kaiden Average is negative."
 	);
 	// note: this is the same test as WR < KAVG. If KAVG is negative, the above
 	// suite fails first.
-	ThrowsToSnapshot(
-		t,
-		() => InverseCalculateBPI(100, 100, -1, 120, null),
-		"Should throw if WR is negative."
-	);
-	ThrowsToSnapshot(
-		t,
-		() => InverseCalculateBPI(100, 100, 110, -1, null),
-		"Should throw if MAX is negative."
-	);
+	ThrowsToSnapshot(t, () => inverse(100, 100, -1, 120, null), "Should throw if WR is negative.");
+	ThrowsToSnapshot(t, () => inverse(100, 100, 110, -1, null), "Should throw if MAX is negative.");
 
 	ThrowsToSnapshot(
 		t,
-		() => InverseCalculateBPI(100, 0, 110, 120, null),
+		() => inverse(100, 0, 110, 120, null),
 		"Should throw if Kaiden Average is 0."
 	);
 	// note: this is the same test as WR < KAVG. If KAVG is negative, the above
 	// suite fails first.
-	ThrowsToSnapshot(
-		t,
-		() => InverseCalculateBPI(100, 100, 0, 120, null),
-		"Should throw if WR is 0."
-	);
-	ThrowsToSnapshot(
-		t,
-		() => InverseCalculateBPI(100, 100, 110, 0, null),
-		"Should throw if MAX is 0."
-	);
+	ThrowsToSnapshot(t, () => inverse(100, 100, 0, 120, null), "Should throw if WR is 0.");
+	ThrowsToSnapshot(t, () => inverse(100, 100, 110, 0, null), "Should throw if MAX is 0.");
+
+	ThrowsToSnapshot(t, () => inverse(100, 100, 130, 120, null), "Should throw if WR > MAX");
+	ThrowsToSnapshot(t, () => inverse(100, 125, 120, 130, null), "Should throw if KAVG > WR");
+	ThrowsToSnapshot(t, () => inverse(100, 120, 120, 130, null), "Should throw if KAVG == WR");
 
 	ThrowsToSnapshot(
 		t,
-		() => InverseCalculateBPI(100, 100, 130, 120, null),
-		"Should throw if WR > MAX"
-	);
-	ThrowsToSnapshot(
-		t,
-		() => InverseCalculateBPI(100, 125, 120, 130, null),
-		"Should throw if KAVG > WR"
-	);
-	ThrowsToSnapshot(
-		t,
-		() => InverseCalculateBPI(100, 120, 120, 130, null),
-		"Should throw if KAVG == WR"
-	);
-
-	ThrowsToSnapshot(
-		t,
-		() => InverseCalculateBPI(100, 15.5, 110, 120, null),
+		() => inverse(100, 15.5, 110, 120, null),
 		"Should throw if KAVG is not an integer."
 	);
 	ThrowsToSnapshot(
 		t,
-		() => InverseCalculateBPI(100, 100, 15.5, 120, null),
+		() => inverse(100, 100, 15.5, 120, null),
 		"Should throw if WR is not an integer."
 	);
 	ThrowsToSnapshot(
 		t,
-		() => InverseCalculateBPI(100, 100, 110, 15.5, null),
+		() => inverse(100, 100, 110, 15.5, null),
 		"Should throw if MAX is not an integer."
 	);
 
 	ThrowsToSnapshot(
 		t,
-		() => InverseCalculateBPI(-16, 1100, 1200, 1300, 1.175),
+		() => inverse(-16, 1100, 1200, 1300, 1.175),
 		"BPI less than -15 should throw an error."
 	);
 
@@ -320,26 +292,26 @@ t.test("InverseBPI Validation Tests", (t) => {
 
 t.test("InverseBPI Edge Cases", (t) => {
 	t.equal(
-		InverseCalculateBPI(30.07, 1100, 1200, 1300, 1.175),
-		InverseCalculateBPI(30.07, 1100, 1200, 1300, null),
+		inverse(30.07, 1100, 1200, 1300, 1.175),
+		inverse(30.07, 1100, 1200, 1300, null),
 		"Null as a co-efficient should be identical to 1.175 as a co-efficient"
 	);
 	t.equal(
-		InverseCalculateBPI(30.07, 1100, 1200, 1300, 1.175),
-		InverseCalculateBPI(30.07, 1100, 1200, 1300, -1),
+		inverse(30.07, 1100, 1200, 1300, 1.175),
+		inverse(30.07, 1100, 1200, 1300, -1),
 		"-1 as a co-efficient should be identical to 1.175 as a co-efficient"
 	);
 
 	isAprx(
 		t,
-		InverseCalculateBPI(30.07, 1100, 1300, 1300, 1.175),
+		inverse(30.07, 1100, 1300, 1300, 1.175),
 		1275,
 		"WR should be allowed to be equal to MAX."
 	);
 
 	isAprx(
 		t,
-		InverseCalculateBPI(10_000, 1100, 1200, 1300, 1.175),
+		inverse(10_000, 1100, 1200, 1300, 1.175),
 		1300,
 		"BPI way larger than the maximum possible BPI available on the chart should return MAX."
 	);
