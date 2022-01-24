@@ -17,8 +17,10 @@ import { integer } from "../util/types";
  * @returns A number between -15 and 100. Unless your score is better than
  * the world record, in which case returns can be above 100.
  *
- * @edgecase Any score better than the world record *is* now the world record,
- * but data may take a while to update, so scores can exceed 100BPI.
+ * @edgecase Even though any score better than the world record *is* now the world record,
+ * it takes around 6 months for the official data on the world record to be updated.
+ * Since changing the worldRecord affects all scores on the chart, poyashi's
+ * implementation just lets BPI exceed 100 until patched.
  *
  * @edgecase BPI is undefined for the case where the world record is equal to the
  * kaiden average.
