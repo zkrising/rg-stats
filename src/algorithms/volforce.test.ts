@@ -737,6 +737,12 @@ t.test("InverseVF5 Tests", (t) => {
 		testCase(t);
 	}
 
+	ThrowsToSnapshot(
+		t,
+		() => inverseVF5(900, "FAILED", 1),
+		"Should throw if the volforce is impossible to achieve with this lamp/level."
+	);
+
 	t.end();
 });
 
@@ -833,6 +839,12 @@ t.test("InverseVF6 Tests", (t) => {
 	for (const testCase of testCases) {
 		testCase(t);
 	}
+
+	ThrowsToSnapshot(
+		t,
+		() => inverseVF6(900, "FAILED", 1),
+		"Should throw if the volforce is impossible to achieve with this lamp/level."
+	);
 
 	t.end();
 });
