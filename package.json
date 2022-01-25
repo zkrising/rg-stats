@@ -29,11 +29,12 @@
 		"snapshot": "tap",
 		"snap": "tap",
 		"build": "tsc",
-		"prepublishOnly": "tap && tsc"
+		"prepublishOnly": "tap && tsc",
+		"lint": "eslint . --fix"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+httpas://github.com/TNG-dev/rg-stats.git"
+		"url": "git+https://github.com/TNG-dev/rg-stats.git"
 	},
 	"keywords": [
 		"rhythm",

@@ -1,5 +1,5 @@
 import { FloorToNDP } from "../util/math";
-import { GetEntries, GetEntriesAsArray } from "../util/misc";
+import { GetEntriesAsArray } from "../util/misc";
 import { ThrowIf } from "../util/throw-if";
 
 export type SDVXGrades = "D" | "C" | "B" | "A" | "A+" | "AA" | "AA+" | "AAA" | "AAA+" | "S";
