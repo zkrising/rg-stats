@@ -1,7 +1,15 @@
 import t from "tap";
 import { TestCase } from "../test-utils/test-case";
 import { ThrowsToSnapshot } from "../test-utils/throw-snapshot";
-import { calculateVF4, calculateVF5, calculateVF6, inverseVF4, SDVXLamps } from "./volforce";
+import {
+	calculateVF4,
+	calculateVF5,
+	calculateVF6,
+	inverseVF4,
+	inverseVF5,
+	inverseVF6,
+	SDVXLamps,
+} from "./volforce";
 
 t.test("VF4 Tests", (t) => {
 	function VF4TestCase(level: number, expectedVF4: number, score: number) {
@@ -699,6 +707,39 @@ t.test("VF5 Tests", (t) => {
 	t.end();
 });
 
+t.test("InverseVF5 Tests", (t) => {
+	function InvVF5TestCase(
+		level: number,
+		vf5: number,
+		lamp: Exclude<SDVXLamps, "PERFECT ULTIMATE CHAIN">,
+		expectedScore: number
+	): TestCase {
+		return (t) => {
+			const score = inverseVF5(vf5, lamp, level);
+
+			t.equal(
+				score,
+				expectedScore,
+				`${vf5} VF5 on a level ${level} chart with lamp ${lamp} should be inverted to ${expectedScore}. (Got ${score})`
+			);
+		};
+	}
+
+	const testCases = [
+		InvVF5TestCase(20, 0.4, "CLEAR", 9_803_922),
+		InvVF5TestCase(20, 0.4, "EXCESSIVE CLEAR", 9_800_000),
+		InvVF5TestCase(13, 0.12, "CLEAR", 5_769_231),
+		InvVF5TestCase(13, 0.12, "FAILED", 9_516_257),
+		InvVF5TestCase(18, 0.31, "ULTIMATE CHAIN", 9_012_152),
+	];
+
+	for (const testCase of testCases) {
+		testCase(t);
+	}
+
+	t.end();
+});
+
 t.test("VF6 Tests", (t) => {
 	function VF6TestCase(
 		level: number,
@@ -757,6 +798,39 @@ t.test("VF6 Tests", (t) => {
 	];
 
 	for (const testCase of VF5ExampleData) {
+		testCase(t);
+	}
+
+	t.end();
+});
+
+t.test("InverseVF6 Tests", (t) => {
+	function InvVF6TestCase(
+		level: number,
+		vf6: number,
+		lamp: Exclude<SDVXLamps, "PERFECT ULTIMATE CHAIN">,
+		expectedScore: number
+	): TestCase {
+		return (t) => {
+			const score = inverseVF6(vf6, lamp, level);
+
+			t.equal(
+				score,
+				expectedScore,
+				`${vf6} VF6 on a level ${level} chart with lamp ${lamp} should be inverted to ${expectedScore}. (Got ${score})`
+			);
+		};
+	}
+
+	const testCases = [
+		InvVF6TestCase(20, 0.413, "CLEAR", 9_900_000),
+		InvVF6TestCase(20, 0.421, "EXCESSIVE CLEAR", 9_900_000),
+		InvVF6TestCase(13, 0.121, "CLEAR", 5_817_308),
+		InvVF6TestCase(13, 0.121, "FAILED", 9_595_559),
+		InvVF6TestCase(18, 0.31, "ULTIMATE CHAIN", 9_012_152),
+	];
+
+	for (const testCase of testCases) {
 		testCase(t);
 	}
 

@@ -110,12 +110,12 @@ export function calculateVF5(score: number, lamp: SDVXLamps, level: number) {
  * plays a part in VF5.
  * @param level - The level of the chart you're inverting for.
  */
-export function inverseVF5(vf5: number, lamp: SDVXLamps, level: number) {
-	const lampCoefficient = VF5LampCoefficients[lamp];
-
-	const scoreTimesGradeCoef = (100 * 10_000_000 * vf5) / (2 * level * lampCoefficient);
-
-	const score = AttemptGradeCoefficientDivide(scoreTimesGradeCoef, VF4GradeCoefficients);
+export function inverseVF5(
+	vf5: number,
+	lamp: Exclude<SDVXLamps, "PERFECT ULTIMATE CHAIN">,
+	level: number
+) {
+	const score = InvertUnroundedVF5(vf5, lamp, level);
 
 	if (score === null) {
 		throw new Error(
@@ -149,18 +149,21 @@ export function calculateVF6(score: number, lamp: SDVXLamps, level: number) {
  **
  * @param vf6 - The VF6 to invert.
  * @param lamp - The lamp for this score. This is necessary to know, as lampCoefficient
- * plays a part in VF6.
+ * plays a part in VF6. Passing "PERFECT ULTIMATE CHAIN" as a lamp is invalid, as inverting
+ * it into a score makes no sense.
  * @param level - The level of the chart you're inverting for.
  */
-export function inverseVF6(vf6: number, lamp: SDVXLamps, level: number) {
+export function inverseVF6(
+	vf6: number,
+	// Exclude PUC as input. It doesn't make sense as input, since the answer would
+	// always be 10million.
+	lamp: Exclude<SDVXLamps, "PERFECT ULTIMATE CHAIN">,
+	level: number
+) {
 	// note: this function is actually identical to inverseVF5, but with the caveat
 	// that the error message is different.
-	// This is because inverting this function has to be identical.
-	const lampCoefficient = VF5LampCoefficients[lamp];
 
-	const scoreTimesGradeCoef = (100 * 10_000_000 * vf6) / (2 * level * lampCoefficient);
-
-	const score = AttemptGradeCoefficientDivide(scoreTimesGradeCoef, VF4GradeCoefficients);
+	const score = InvertUnroundedVF5(vf6, lamp, level);
 
 	if (score === null) {
 		throw new Error(
@@ -183,6 +186,30 @@ function CalculateUnroundedVF5(score: number, lamp: SDVXLamps, level: number) {
 	const lampCoefficient = VF5LampCoefficients[lamp];
 
 	return (level * 2 * (score / 10_000_000) * gradeCoefficient * lampCoefficient) / 100;
+}
+
+/**
+ * Attempt to invert VF5 into a score.
+ *
+ * @returns The score if it was possible to be achieved. Else, it returns null.
+ */
+function InvertUnroundedVF5(vf5: number, lamp: SDVXLamps, level: number) {
+	// Note: PERFECT ULTIMATE CHAIN is never passed into this function from typescript
+	// as the calling functions Exclude<T> it from the lamps.
+	// However, a JS caller may call it like this anyway, so we mayaswell throw.
+	ThrowIf(
+		lamp === "PERFECT ULTIMATE CHAIN",
+		"PERFECT ULTIMATE CHAIN as a lampCoefficient does not make sense for an inversion, since the answer would always be 10million.",
+		{ lamp }
+	);
+
+	const lampCoefficient = VF5LampCoefficients[lamp];
+
+	const scoreTimesGradeCoef = (100 * 10_000_000 * vf5) / (2 * level * lampCoefficient);
+
+	const score = AttemptGradeCoefficientDivide(scoreTimesGradeCoef, VF5GradeCoefficients);
+
+	return score;
 }
 
 /**
