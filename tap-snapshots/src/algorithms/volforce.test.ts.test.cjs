@@ -12,3 +12,7 @@ Invalid input, Score cannot be greater than 10million. score=10000001.
 exports[`src/algorithms/volforce.test.ts TAP VF4 Validation Tests > Should throw if score is negative. 1`] = `
 Invalid input, Score cannot be negative. score=-1.
 `
+
+exports[`src/algorithms/volforce.test.ts TAP VF4 Validation Tests > Should throw if the VF4 requested as an inversion is impossible. 1`] = `
+Invalid input. A VF4 of 9000 is not possible on a chart with level 20.
+`

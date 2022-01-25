@@ -72,23 +72,17 @@ export function calculateVF4(score: number, level: number) {
  * @param level - The level of the chart you're inverting for.
  */
 export function inverseVF4(vf4: number, level: number) {
-	const i = (10_000_000 * vf4) / (25 * (level + 1));
+	const scoreTimesGradeCoef = (10_000_000 * vf4) / (25 * (level + 1));
 
-	for (const [grade, gradeCoef] of GetEntriesAsArray(VF4GradeCoefficients).reverse()) {
-		const maybeScore = i / gradeCoef;
+	const score = AttemptGradeCoefficientDivide(scoreTimesGradeCoef, VF4GradeCoefficients);
 
-		const { lower, upper } = SDVXGetGradeBoundaries(grade);
-
-		if (maybeScore <= lower) {
-			return lower;
-		} else if (maybeScore < upper || (maybeScore === upper && upper === 10_000_000)) {
-			return Math.round(maybeScore);
-		}
+	if (score === null) {
+		throw new Error(
+			`Invalid input. A VF4 of ${vf4} is not possible on a chart with level ${level}.`
+		);
 	}
 
-	throw new Error(
-		`Invalid input. A VF4 of ${vf4} is not possible on a chart with level ${level}.`
-	);
+	return score;
 }
 
 /**
@@ -106,6 +100,33 @@ export function calculateVF5(score: number, lamp: SDVXLamps, level: number) {
 }
 
 /**
+ * Given a VF5 value and a chart level, return what score is needed to get that
+ * VF5.
+ *
+ * If the score needed is greater than 10million, this function will throw.
+ **
+ * @param vf5 - The VF5 to invert.
+ * @param lamp - The lamp for this score. This is necessary to know, as lampCoefficient
+ * plays a part in VF5.
+ * @param level - The level of the chart you're inverting for.
+ */
+export function inverseVF5(vf5: number, lamp: SDVXLamps, level: number) {
+	const lampCoefficient = VF5LampCoefficients[lamp];
+
+	const scoreTimesGradeCoef = (100 * 10_000_000 * vf5) / (2 * level * lampCoefficient);
+
+	const score = AttemptGradeCoefficientDivide(scoreTimesGradeCoef, VF4GradeCoefficients);
+
+	if (score === null) {
+		throw new Error(
+			`Invalid input. A VF5 of ${vf5} is not possible on a chart with level ${level}.`
+		);
+	}
+
+	return score;
+}
+
+/**
  * Calculate VOLFORCE as it's defined in SDVX6.
  *
  * @param score - The user's score. Between 0 and 10million.
@@ -118,6 +139,36 @@ export function calculateVF6(score: number, lamp: SDVXLamps, level: number) {
 
 	// VF6 is just unroundedVF5 to 3 decimal places instead of 2.
 	return FloorToNDP(unroundedVF5, 3);
+}
+
+/**
+ * Given a VF6 value and a chart level, return what score is needed to get that
+ * VF5.
+ *
+ * If the score needed is greater than 10million, this function will throw.
+ **
+ * @param vf6 - The VF6 to invert.
+ * @param lamp - The lamp for this score. This is necessary to know, as lampCoefficient
+ * plays a part in VF6.
+ * @param level - The level of the chart you're inverting for.
+ */
+export function inverseVF6(vf6: number, lamp: SDVXLamps, level: number) {
+	// note: this function is actually identical to inverseVF5, but with the caveat
+	// that the error message is different.
+	// This is because inverting this function has to be identical.
+	const lampCoefficient = VF5LampCoefficients[lamp];
+
+	const scoreTimesGradeCoef = (100 * 10_000_000 * vf6) / (2 * level * lampCoefficient);
+
+	const score = AttemptGradeCoefficientDivide(scoreTimesGradeCoef, VF4GradeCoefficients);
+
+	if (score === null) {
+		throw new Error(
+			`Invalid input. A VF6 of ${vf6} is not possible on a chart with level ${level}.`
+		);
+	}
+
+	return score;
 }
 
 /**
@@ -193,7 +244,43 @@ function SDVXGetGradeBoundaries(grade: SDVXGrades): { lower: number; upper: numb
 	return { lower: 0, upper: 7_000_000 };
 }
 
+/**
+ * Assert necessary things about a provided score.
+ */
 function AssertProvidedScore(score: number) {
 	ThrowIf(score > 10_000_000, "Score cannot be greater than 10million", { score });
 	ThrowIf.negative(score, "Score cannot be negative", { score });
+}
+
+/**
+ * Go through all of the gradeBoundaries for a game and use them as guesses for score
+ * values.
+ *
+ * This means we try dividing by all the gradeCoefficients until we find one
+ * where the resulting score would have the same grade as the given coefficient.
+ *
+ * Used for inverting VF.
+ *
+ * @param scoreTimesGradeCoef - The expected score multiplied by the gradeCoefficient.
+ * @param coefficients - A record of SDVXGrade -> gradeCoefficient
+ * @returns The score divided by the gradeCoefficient. If not possible, this returns
+ * null.
+ */
+function AttemptGradeCoefficientDivide(
+	scoreTimesGradeCoef: number,
+	coefficients: Record<SDVXGrades, number>
+) {
+	for (const [grade, gradeCoef] of GetEntriesAsArray(coefficients).reverse()) {
+		const maybeScore = scoreTimesGradeCoef / gradeCoef;
+
+		const { lower, upper } = SDVXGetGradeBoundaries(grade);
+
+		if (maybeScore <= lower) {
+			return lower;
+		} else if (maybeScore < upper || (maybeScore === upper && upper === 10_000_000)) {
+			return Math.round(maybeScore);
+		}
+	}
+
+	return null;
 }
