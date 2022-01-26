@@ -5,6 +5,10 @@
  * Make sure to inspect the output below.  Do not ignore changes!
  */
 'use strict'
+exports[`src/algorithms/jubility.test.ts TAP Inverse Jubility Tests > Should throw if the requested jubility is not possible on a chart of that level. 1`] = `
+Invalid input, A jubility of 9000 is not possible on a chart with level 1. jubility=9000, level=1.
+`
+
 exports[`src/algorithms/jubility.test.ts TAP Jubility Validation Tests > Should throw if chart level is negative. 1`] = `
 Invalid input, Level cannot be negative. level=-1.
 `

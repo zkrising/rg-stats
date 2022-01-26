@@ -329,5 +329,11 @@ t.test("Inverse Jubility Tests", (t) => {
 		MakeTestCase(testCase[0], testCase[1], testCase[2])(t);
 	}
 
+	ThrowsToSnapshot(
+		t,
+		() => inverse(9000, 1),
+		"Should throw if the requested jubility is not possible on a chart of that level."
+	);
+
 	t.end();
 });

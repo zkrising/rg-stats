@@ -6,12 +6,14 @@ import { integer } from "../util/types";
  * Calculates WACCAs rate for a score.
  *
  * @param score - The score to calculate the rate for.
- * @param level - The internal decimal level of the chart the score was achieved on.
+ * @param internalChartLevel - The internal decimal level of the chart the score was achieved on.
  */
-export function calculate(score: integer, level: number) {
+export function calculate(score: integer, internalChartLevel: number) {
 	ThrowIf(score > 1_000_000, "Score cannot be greater than 1million.", { score });
 	ThrowIf.negative(score, "Score cannot be negative.", { score });
-	ThrowIf.negative(level, "Chart level cannot be negative.", { level });
+	ThrowIf.negative(internalChartLevel, "Chart level cannot be negative.", {
+		level: internalChartLevel,
+	});
 
 	let scoreCoef = 1;
 
@@ -36,7 +38,7 @@ export function calculate(score: integer, level: number) {
 		scoreCoef = 1.5;
 	}
 
-	return RoundToNDP(scoreCoef * level, 3);
+	return RoundToNDP(scoreCoef * internalChartLevel, 3);
 }
 
 /**
@@ -44,20 +46,26 @@ export function calculate(score: integer, level: number) {
  * that rate.
  *
  * @param rate - The rate to inverse
- * @param level - The internal decimal level of the chart the rate was on.
+ * @param internalChartLevel - The internal decimal level of the chart the rate was on.
  */
-export function inverse(rate: number, level: number) {
-	ThrowIf.negative(level, "Chart level cannot be negative.", { level });
+export function inverse(rate: number, internalChartLevel: number) {
+	ThrowIf.negative(internalChartLevel, "Chart level cannot be negative.", {
+		level: internalChartLevel,
+	});
 
 	// I know it seems arbitrary to round this to 4dp, but the issue is that
 	// obviously correct things like 36.6/12.2 end up as 3.0000[...]4, which
 	// causes this alg to fail.
-	const scoreCoef = RoundToNDP(rate / level, 4);
+	const scoreCoef = RoundToNDP(rate / internalChartLevel, 4);
 
-	ThrowIf(scoreCoef > 4, `A rate of ${rate} is not possible on a chart of level ${level}.`, {
-		rate,
-		level,
-	});
+	ThrowIf(
+		scoreCoef > 4,
+		`A rate of ${rate} is not possible on a chart of level ${internalChartLevel}.`,
+		{
+			rate,
+			level: internalChartLevel,
+		}
+	);
 
 	if (scoreCoef > 3.75) {
 		return 990_000;

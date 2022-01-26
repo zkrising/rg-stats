@@ -32,5 +32,13 @@ export function calculate(score: number, musicRate: number, level: number) {
  * @param level - The level for the chart.
  */
 export function inverse(jubility: number, level: number) {
-	return (99 / (12.5 * level)) * jubility;
+	const rate = (99 / (12.5 * level)) * jubility;
+
+	ThrowIf(
+		rate > 120,
+		`A jubility of ${jubility} is not possible on a chart with level ${level}.`,
+		{ jubility, level }
+	);
+
+	return rate;
 }

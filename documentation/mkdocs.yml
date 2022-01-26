@@ -1,0 +1,51 @@
+site_name: RG Stats Documentation
+site_description: Documentation for Rhythm Game Stats and the TypeScript library.
+site_author: zkldi
+site_url: https://rgstats.rtfd.io
+
+theme:
+    name: material
+    features:
+        - navigation.instant
+        - navigation.tabs
+    palette:
+        - scheme: slate
+          primary: deep purple
+          accent: deep purple
+          toggle:
+              icon: material/weather-sunny
+              name: Switch to light mode
+        - scheme: default
+          primary: deep purple
+          accent: deep purple
+          toggle:
+              icon: material/weather-night
+              name: Switch to dark mode
+
+nav:
+    - Introduction: "index.md"
+    - Algorithms:
+          - "algorithms/jubility.md"
+          - "algorithms/chunithm-rating.md"
+          - "algorithms/gitadora-skill.md"
+          - "algorithms/wacca-rate.md"
+          - "algorithms/volforce.md"
+          - "algorithms/popn-classpoints.md"
+          - "algorithms/poyashi-bpi.md"
+
+markdown_extensions:
+    - admonition
+    - pymdownx.highlight
+    - pymdownx.superfences
+    - abbr
+    - pymdownx.snippets
+    - footnotes
+    - toc:
+          toc_depth: 2
+          permalink: true
+    - pymdownx.arithmatex:
+          generic: true
+
+extra_javascript:
+    - https://polyfill.io/v3/polyfill.min.js?features=es6
+    - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
