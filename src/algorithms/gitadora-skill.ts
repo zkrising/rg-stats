@@ -32,11 +32,11 @@ export function inverse(skill: number, level: number) {
 
 	const percent = (100 * skill) / (20 * level);
 
-	if (percent >= 100) {
-		throw new Error(
-			`A skill level of ${skill} is not possible on a chart with level ${level}.`
-		);
-	}
+	ThrowIf(
+		percent > 100,
+		`A skill level of ${skill} is not possible on a chart with level ${level}.`,
+		{ skill, level }
+	);
 
 	return percent;
 }

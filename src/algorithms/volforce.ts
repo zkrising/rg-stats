@@ -76,11 +76,10 @@ export function inverseVF4(vf4: number, level: number) {
 
 	const score = AttemptGradeCoefficientDivide(scoreTimesGradeCoef, VF4GradeCoefficients);
 
-	if (score === null) {
-		throw new Error(
-			`Invalid input. A VF4 of ${vf4} is not possible on a chart with level ${level}.`
-		);
-	}
+	ThrowIf(score === null, `A VF4 of ${vf4} is not possible on a chart with level ${level}`, {
+		vf4,
+		level,
+	});
 
 	return score;
 }
@@ -117,11 +116,10 @@ export function inverseVF5(
 ) {
 	const score = InvertUnroundedVF5(vf5, lamp, level);
 
-	if (score === null) {
-		throw new Error(
-			`Invalid input. A VF5 of ${vf5} is not possible on a chart with level ${level}.`
-		);
-	}
+	ThrowIf(score === null, `A VF5 of ${vf5} is not possible on a chart with level ${level}.`, {
+		vf5,
+		level,
+	});
 
 	return score;
 }
@@ -165,11 +163,10 @@ export function inverseVF6(
 
 	const score = InvertUnroundedVF5(vf6, lamp, level);
 
-	if (score === null) {
-		throw new Error(
-			`Invalid input. A VF6 of ${vf6} is not possible on a chart with level ${level}.`
-		);
-	}
+	ThrowIf(score === null, `A VF6 of ${vf6} is not possible on a chart with level ${level}.`, {
+		vf6,
+		level,
+	});
 
 	return score;
 }

@@ -14,7 +14,7 @@ Invalid input, Skill cannot be negative. skill=-1.
 `
 
 exports[`src/algorithms/gitadora-skill.test.ts TAP GITADORA Inverse Skill Validation Tests > Should throw if the skill provided was not possible on this chart. 1`] = `
-A skill level of 9000 is not possible on a chart with level 1.
+Invalid input, A skill level of 9000 is not possible on a chart with level 1. skill=9000, level=1.
 `
 
 exports[`src/algorithms/gitadora-skill.test.ts TAP GITADORA Skill Validation Tests > Should throw if level provided was negative 1`] = `

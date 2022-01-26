@@ -54,9 +54,10 @@ export function inverse(rate: number, level: number) {
 	// causes this alg to fail.
 	const scoreCoef = RoundToNDP(rate / level, 4);
 
-	if (scoreCoef > 4) {
-		throw new Error(`A rate of ${rate} is not possible on a chart of level ${level}.`);
-	}
+	ThrowIf(scoreCoef > 4, `A rate of ${rate} is not possible on a chart of level ${level}.`, {
+		rate,
+		level,
+	});
 
 	if (scoreCoef > 3.75) {
 		return 990_000;
