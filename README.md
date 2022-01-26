@@ -2,7 +2,7 @@
 
 This is a TypeScript library for calculating rhythm game stats.
 
-You can install it with any of these commands:
+You can install it with your preferred NodeJS package manager:
 ```sh
 # npm
 npm install rg-stats
@@ -16,13 +16,15 @@ pnpm add rg-stats
 
 ## API
 
-I haven't wrote documentation yet. I probably should.
+Documentation is available on [Read The Docs](https://rgstats.rtfd.io).
 
-## Development Info
+## Contributing to the library
 
-### Installing
+This is a mini-monorepo. The TS library is in `library/`, and the documentation is in `documentation/`
 
-We use [PNPM](https://pnpm.io) as our package manager. Use `pnpm install` to install dependencies.
+### Library
+
+We use [PNPM](https://pnpm.io) as our package manager. Use `pnpm install` inside `library/` to install dependencies.
 
 ### Build Script
 
