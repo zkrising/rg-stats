@@ -25,7 +25,8 @@ export function calculate(score: number, musicRate: number, level: number) {
 
 /**
  * Given a jubility, return the musicRate necessary to get that jubility.
- * This assumes that the player has a score >= 700k.
+ * This assumes that the player has a score >= 700k, as otherwise no inversion
+ * is possible.
  *
  * @param jubility - The jubility to inversely calculate.
  * @param level - The level for the chart.
