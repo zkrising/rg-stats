@@ -2,6 +2,7 @@ site_name: RG Stats Documentation
 site_description: Documentation for Rhythm Game Stats and the TypeScript library.
 site_author: zkldi
 site_url: https://rgstats.rtfd.io
+docs_dir: documentation
 
 theme:
     name: material
