@@ -1,8 +1,9 @@
-# RG Stats Documentation
+# RG Stats Overview
 
 This is the documentation for the RG-Stats TypeScript library.
 Although this is primarily documentation for our API, if you're also just researching
-how various stats work in rhythm games, the documentation covers that aswell.
+how various stats work in rhythm games, we recommend looking at the [source code](https://github.com/TNG-dev/rg-stats) for this
+library.
 
 The library and documentation is maintained by [zkldi](https://github.com/zkldi) for [Tachi](https://tachi.rtfd.io).
 

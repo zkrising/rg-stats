@@ -1,6 +1,7 @@
 import { FloorToNDP } from "../util/math";
 import { GetEntriesAsArray } from "../util/misc";
 import { ThrowIf } from "../util/throw-if";
+import { integer } from "../util/types";
 
 export type SDVXGrades = "D" | "C" | "B" | "A" | "A+" | "AA" | "AA+" | "AAA" | "AAA+" | "S";
 export type SDVXLamps =
@@ -52,7 +53,7 @@ const VF5LampCoefficients: Record<SDVXLamps, number> = {
  * @param score - The user's score. Between 0 and 10million.
  * @param level - The level of the chart. Between 0 and 20, but this is not enforced.
  */
-export function calculateVF4(score: number, level: number) {
+export function calculateVF4(score: integer, level: integer) {
 	AssertProvidedScore(score);
 
 	const grade = SDVXScoreToGrade(score);
@@ -71,7 +72,7 @@ export function calculateVF4(score: number, level: number) {
  * @param vf4 - The VF4 to invert.
  * @param level - The level of the chart you're inverting for.
  */
-export function inverseVF4(vf4: number, level: number) {
+export function inverseVF4(vf4: integer, level: integer) {
 	const scoreTimesGradeCoef = (10_000_000 * vf4) / (25 * (level + 1));
 
 	const score = AttemptGradeCoefficientDivide(scoreTimesGradeCoef, VF4GradeCoefficients);
@@ -90,7 +91,7 @@ export function inverseVF4(vf4: number, level: number) {
  * @param score - The user's score. Between 0 and 10million.
  * @param level - The level of the chart. Between 0 and 20, but this is not enforced.
  */
-export function calculateVF5(score: number, lamp: SDVXLamps, level: number) {
+export function calculateVF5(score: integer, lamp: SDVXLamps, level: integer) {
 	AssertProvidedScore(score);
 
 	const unroundedVF5 = CalculateUnroundedVF5(score, lamp, level);
@@ -103,7 +104,7 @@ export function calculateVF5(score: number, lamp: SDVXLamps, level: number) {
  * VF5.
  *
  * If the score needed is greater than 10million, this function will throw.
- **
+ *
  * @param vf5 - The VF5 to invert.
  * @param lamp - The lamp for this score. This is necessary to know, as lampCoefficient
  * plays a part in VF5.
@@ -111,8 +112,10 @@ export function calculateVF5(score: number, lamp: SDVXLamps, level: number) {
  */
 export function inverseVF5(
 	vf5: number,
+	// Exclude PUC as input. It doesn't make sense as input, since the answer would
+	// always be 10million.
 	lamp: Exclude<SDVXLamps, "PERFECT ULTIMATE CHAIN">,
-	level: number
+	level: integer
 ) {
 	const score = InvertUnroundedVF5(vf5, lamp, level);
 
@@ -130,7 +133,7 @@ export function inverseVF5(
  * @param score - The user's score. Between 0 and 10million.
  * @param level - The level of the chart. Between 0 and 20, but this is not enforced.
  */
-export function calculateVF6(score: number, lamp: SDVXLamps, level: number) {
+export function calculateVF6(score: integer, lamp: SDVXLamps, level: integer) {
 	AssertProvidedScore(score);
 
 	const unroundedVF5 = CalculateUnroundedVF5(score, lamp, level);
@@ -156,7 +159,7 @@ export function inverseVF6(
 	// Exclude PUC as input. It doesn't make sense as input, since the answer would
 	// always be 10million.
 	lamp: Exclude<SDVXLamps, "PERFECT ULTIMATE CHAIN">,
-	level: number
+	level: integer
 ) {
 	// note: this function is actually identical to inverseVF5, but with the caveat
 	// that the error message is different.
@@ -176,7 +179,7 @@ export function inverseVF6(
  * is floored to 2 decimal places, wherease VF6 is floored to 3. This lets us
  * reuse the same algorithm.
  */
-function CalculateUnroundedVF5(score: number, lamp: SDVXLamps, level: number) {
+function CalculateUnroundedVF5(score: integer, lamp: SDVXLamps, level: integer) {
 	const grade = SDVXScoreToGrade(score);
 
 	const gradeCoefficient = VF5GradeCoefficients[grade];
@@ -190,7 +193,7 @@ function CalculateUnroundedVF5(score: number, lamp: SDVXLamps, level: number) {
  *
  * @returns The score if it was possible to be achieved. Else, it returns null.
  */
-function InvertUnroundedVF5(vf5: number, lamp: SDVXLamps, level: number) {
+function InvertUnroundedVF5(vf5: number, lamp: SDVXLamps, level: integer) {
 	// Note: PERFECT ULTIMATE CHAIN is never passed into this function from typescript
 	// as the calling functions Exclude<T> it from the lamps.
 	// However, a JS caller may call it like this anyway, so we mayaswell throw.
@@ -214,7 +217,7 @@ function InvertUnroundedVF5(vf5: number, lamp: SDVXLamps, level: number) {
  * @param score - The score to convert - between 0 and 10million.
  * @returns A string representing a grade.
  */
-function SDVXScoreToGrade(score: number): SDVXGrades {
+function SDVXScoreToGrade(score: integer): SDVXGrades {
 	if (score < 7_000_000) {
 		return "D";
 	} else if (score < 8_000_000) {
@@ -244,7 +247,7 @@ function SDVXScoreToGrade(score: number): SDVXGrades {
  *
  * Bounds are returned as lower <= k < upper.
  */
-function SDVXGetGradeBoundaries(grade: SDVXGrades): { lower: number; upper: number } {
+function SDVXGetGradeBoundaries(grade: SDVXGrades): { lower: integer; upper: integer } {
 	if (grade === "S") {
 		return { lower: 9_900_000, upper: 10_000_000 };
 	} else if (grade === "AAA+") {
@@ -271,7 +274,7 @@ function SDVXGetGradeBoundaries(grade: SDVXGrades): { lower: number; upper: numb
 /**
  * Assert necessary things about a provided score.
  */
-function AssertProvidedScore(score: number) {
+function AssertProvidedScore(score: integer) {
 	ThrowIf(score > 10_000_000, "Score cannot be greater than 10million", { score });
 	ThrowIf.negative(score, "Score cannot be negative", { score });
 }

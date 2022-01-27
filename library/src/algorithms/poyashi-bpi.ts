@@ -30,14 +30,14 @@ export function calculate(
 	kaidenAverage: integer,
 	worldRecord: integer,
 	max: integer,
-	pc: number | null
+	powCoef: number | null
 ) {
-	let powCoef = pc ?? 1.175;
-	if (powCoef === -1) {
-		powCoef = 1.175;
+	let powCoefficient = powCoef ?? 1.175;
+	if (powCoefficient === -1) {
+		powCoefficient = 1.175;
 	}
 
-	AssertProvidedEXScores(kaidenAverage, worldRecord, max, powCoef);
+	AssertProvidedEXScores(kaidenAverage, worldRecord, max, powCoefficient);
 
 	ThrowIf.not(Number.isSafeInteger(yourEx), "Provided EX was not an integer.", { yourEx });
 	ThrowIf(yourEx > max, "Provided EX was greater than MAX.", { yourEx, max });
@@ -68,7 +68,7 @@ export function calculate(
 
 		// To fix this, the poyashi implementation negates logExPrime
 		// and raises it to the powCoef.
-		const negativeRaisedValue = (-1 * logExPrime) ** powCoef;
+		const negativeRaisedValue = (-1 * logExPrime) ** powCoefficient;
 
 		// and then negates it again when multiplying by 100.
 		const bpi = 100 * -1 * negativeRaisedValue;
@@ -79,7 +79,7 @@ export function calculate(
 
 		return bpi;
 	} else {
-		return 100 * logExPrime ** powCoef;
+		return 100 * logExPrime ** powCoefficient;
 	}
 }
 
@@ -117,23 +117,20 @@ function PikaGreatFunction(score: integer, max: integer) {
  * @edgecase -15BPI is achievable by many possible EXs, since it is the lower bound
  * for any given chart. Passing -15 into the function will return the largest
  * possible exScore that results in -15BPI.
- *
- * @see {PikaGreatFunction}
- * @see {calculate}
  */
 export function inverse(
 	bpi: number,
 	kaidenAverage: integer,
 	worldRecord: integer,
 	max: integer,
-	pc: number | null
+	powCoef: number | null
 ) {
-	let powCoef = pc ?? 1.175;
-	if (powCoef === -1) {
-		powCoef = 1.175;
+	let powCoefficient = powCoef ?? 1.175;
+	if (powCoefficient === -1) {
+		powCoefficient = 1.175;
 	}
 
-	AssertProvidedEXScores(kaidenAverage, worldRecord, max, powCoef);
+	AssertProvidedEXScores(kaidenAverage, worldRecord, max, powCoefficient);
 
 	ThrowIf(bpi < -15, "BPI must be greater than or equal to -15.", { bpi });
 
@@ -142,9 +139,9 @@ export function inverse(
 	let logExPrime;
 
 	if (isWorseThanKavg) {
-		logExPrime = -1 * (bpi / -100) ** (1 / powCoef);
+		logExPrime = -1 * (bpi / -100) ** (1 / powCoefficient);
 	} else {
-		logExPrime = (bpi / 100) ** (1 / powCoef);
+		logExPrime = (bpi / 100) ** (1 / powCoefficient);
 	}
 
 	const kaidenPGF = PikaGreatFunction(kaidenAverage, max);

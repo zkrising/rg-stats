@@ -1,4 +1,5 @@
 import { ThrowIf } from "../util/throw-if";
+import { integer } from "../util/types";
 
 export type PopnLamps = "FAILED" | "EASY CLEAR" | "CLEAR" | "FULL COMBO" | "PERFECT";
 
@@ -10,7 +11,7 @@ export type PopnLamps = "FAILED" | "EASY CLEAR" | "CLEAR" | "FULL COMBO" | "PERF
  * @param level - The level for this chart. Typically between 1 and 50,
  * but the upper bound is not enforced here.
  */
-export function calculate(score: number, lamp: PopnLamps, level: number) {
+export function calculate(score: integer, lamp: PopnLamps, level: integer) {
 	ThrowIf.negative(score, "Score cannot be negative.", { score });
 	ThrowIf(score > 100_000, "Score cannot be better than 100k.", { score });
 	ThrowIf.negative(level, "Chart level cannot be negative.", { level });
@@ -48,7 +49,7 @@ function GetClearBonus(lamp: PopnLamps) {
  * @param level - The level for the chart. Typically between 1 and 50,
  * but the upper bound is not enforced here.
  */
-export function inverse(classPoints: number, lamp: PopnLamps, level: number) {
+export function inverse(classPoints: number, lamp: PopnLamps, level: integer) {
 	ThrowIf.negative(level, "Chart level cannot be negative.", { level });
 
 	if (classPoints === 0) {

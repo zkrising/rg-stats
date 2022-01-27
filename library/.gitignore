@@ -6,6 +6,7 @@ coverage
 /js
 
 .pnpm-debug
+.pnpm-debug*
 logs
 
 .vscode
