@@ -1,5 +1,7 @@
 # Rhythm Game Stats Library
 
+[![Documentation Status](https://readthedocs.org/projects/rgstats/badge/?version=latest)](https://rgstats.readthedocs.io/en/latest/?badge=latest)
+
 This is a TypeScript library for calculating rhythm game stats.
 
 You can install it with your preferred NodeJS package manager:
