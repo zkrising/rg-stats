@@ -7,7 +7,7 @@ import { PoyashiBPI } from "rg-stats"
 
 ## About
 
-BPI is an algorithm used by [beatmania IIDX](https://en.wikipedia.org/wiki/Beatmania_IIDX)players.
+BPI is an algorithm used by [beatmania IIDX](https://en.wikipedia.org/wiki/Beatmania_IIDX) players.
 It's designed for the higher end of IIDX players, being based around Kaiden Averages and World Records.
 
 BPI was originally made by Nori, who also wrote the initial implementation, however it was significantly changed by another person - [Poyashi](https://bpi.poyashi.me) - when they reimplemented it for
