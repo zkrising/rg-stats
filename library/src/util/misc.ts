@@ -7,3 +7,12 @@ export function* GetEntries<K extends string, V>(r: Record<K, V>): Generator<[K,
 export function GetEntriesAsArray<K extends string, V>(r: Record<K, V>): [K, V][] {
 	return [...GetEntries(r)];
 }
+
+export function RepeatNTimes<T>(value: T, n: number): Array<T> {
+	const arr = [];
+	for (let i = 0; i < n; i++) {
+		arr.push(value);
+	}
+
+	return arr;
+}
