@@ -1,6 +1,6 @@
 import { isAprx } from "../test-utils/approx";
 import { TestCase } from "../test-utils/test-case";
-import { calculateFromBPMPerMeasure } from "./itg-highest32";
+import { calculateFromBPMPerMeasure } from "./itg-highest-unbroken";
 import t from "tap";
 import { RepeatNTimes } from "../util/misc";
 
