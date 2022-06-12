@@ -42,8 +42,10 @@ Calculates the fastest series of N unbroken measures on a given chart from NPSPe
  * @param notesPerMeasure - The notes per measure.
  * @param diedAt - Optionally, when to cut this short, such as if the user died at measure
  * 39, and still might've technically did 32 measures of stream.
+ * @param measures - Optionally, override how many measures need to be unbroken. This must
+ * be positive and non-zero. This allows you to calculate Highest 256, or similar.
  *
- * @returns The BPM of the highest 32 unbroken measures in this chart.
+ * @returns The BPM of the highest N unbroken measures in this chart.
  */
 function calculateFromNPSPerMeasure(
 	npsPerMeasure: Array<number>,

@@ -2,7 +2,7 @@ import { ThrowIf } from "../util/throw-if";
 
 /**
  * Given an array of notes per measure, NPS per measure and (optionally) when the user died
- * calculate the fastest series of unbroken '16ths' at 32 measures.
+ * calculate the fastest series of unbroken '16ths' at N measures.
  *
  * 32 @ 190 will return 190,
  * 96 @ 190, user died at m40 is converted to 40 @ 190 and will return 190.
@@ -15,15 +15,17 @@ import { ThrowIf } from "../util/throw-if";
  * @param notesPerMeasure - The notes per measure.
  * @param diedAt - Optionally, when to cut this short, such as if the user died at measure
  * 39, and still might've technically did 32 measures of stream.
+ * @param measures - Optionally, override how many measures need to be unbroken. This must
+ * be positive and non-zero. This allows you to calculate Highest 256, or similar.
  *
- * @returns The BPM of the highest 32 unbroken measures in this chart.
+ * @returns The BPM of the highest N unbroken measures in this chart.
  */
 export function calculateFromNPSPerMeasure(
 	npsPerMeasure: Array<number>,
 	notesPerMeasure: Array<number>,
 	diedAt: number | null = null,
 	measures = 32
-) {
+): number | null {
 	ThrowIf.negativeOrZero(measures, `Measures cannot be negative`, { measures });
 	ThrowIf(
 		npsPerMeasure.length !== notesPerMeasure.length,
@@ -105,7 +107,7 @@ export function calculateFromBPMPerMeasure(
 	notesPerMeasure: Array<number>,
 	diedAt: null | number = null,
 	measures = 32
-) {
+): number | null {
 	return calculateFromNPSPerMeasure(
 		bpmPerMeasure.map(bpmToNPS),
 		notesPerMeasure,
