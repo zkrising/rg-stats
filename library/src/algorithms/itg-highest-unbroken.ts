@@ -16,7 +16,7 @@ import { ThrowIf } from "../util/throw-if";
  * @param diedAt - Optionally, when to cut this short, such as if the user died at measure
  * 39, and still might've technically did 32 measures of stream.
  * @param measures - Optionally, override how many measures need to be unbroken. This must
- * be positive and non-zero. This allows you to calculate Highest 256, or similar.
+ * be greater than 1. This allows you to calculate Highest 256, or similar.
  *
  * @returns The BPM of the highest N unbroken measures in this chart.
  */
@@ -26,12 +26,17 @@ export function calculateFromNPSPerMeasure(
 	diedAt: number | null = null,
 	measures = 32
 ): number | null {
-	ThrowIf.negativeOrZero(measures, `Measures cannot be negative`, { measures });
+	// Implementation note: Measures of 1 is annoying to handle, and nobody should
+	// ever want to calculate that because it's stupid. Just gonna not allow it.
+	ThrowIf(measures < 1, `Measures must be greater than 1`, { measures });
 	ThrowIf(
 		npsPerMeasure.length !== notesPerMeasure.length,
 		`Notes Per Measure and NPS Per Measure didn't have the same length.`,
 		{ npsLen: npsPerMeasure.length, notesLen: notesPerMeasure.length }
 	);
+	ThrowIf(diedAt !== null && diedAt < 0, `DiedAt must be positive.`, {
+		diedAt: diedAt ?? "Null? (Impossible)",
+	});
 
 	// Given an array of equivalent bpms per measure, return the fastest bpm
 	// this user could've effectively streamed N measures of.

@@ -3,6 +3,7 @@ import { TestCase } from "../test-utils/test-case";
 import { calculateFromBPMPerMeasure } from "./itg-highest-unbroken";
 import t from "tap";
 import { RepeatNTimes } from "../util/misc";
+import { ThrowsToSnapshot } from "../test-utils/throw-snapshot";
 
 t.test("ITG Highest Unbroken Tests", (t) => {
 	function MakeTestCase(
@@ -20,9 +21,9 @@ t.test("ITG Highest Unbroken Tests", (t) => {
 				measures
 			);
 
-			const msg = `A breakdown of ${bpmPerMeasure.join(
-				", "
-			)} should result in a highest 32 of ${expected32}`;
+			const msg = `A breakdown of ${bpmPerMeasure.join(", ")} should result in a highest ${
+				measures ?? 32
+			} of ${expected32}`;
 
 			if (expected32 === null || value === null) {
 				return t.equal(value, expected32, msg);
@@ -72,13 +73,39 @@ t.test("ITG Highest Unbroken Tests", (t) => {
 		MakeTestCase(null, RepeatNTimes(200, 1024), RepeatNTimes(16, 1024), null, 1025),
 
 		// and shorter
-		MakeTestCase(200, RepeatNTimes(200, 1), RepeatNTimes(16, 1), null, 1),
-		MakeTestCase(null, RepeatNTimes(200, 1), RepeatNTimes(16, 1), null, 2),
+		MakeTestCase(200, RepeatNTimes(200, 2), RepeatNTimes(16, 2), null, 2),
+		MakeTestCase(null, RepeatNTimes(200, 2), RepeatNTimes(16, 2), null, 3),
 	];
 
 	for (const testCase of testCases) {
 		testCase(t);
 	}
+
+	ThrowsToSnapshot(
+		t,
+		() => calculateFromBPMPerMeasure([], [1]),
+		"Should throw if bpms and notes don't have same length"
+	);
+	ThrowsToSnapshot(
+		t,
+		() => calculateFromBPMPerMeasure([], [], -1),
+		"Should throw if died at is negative"
+	);
+	ThrowsToSnapshot(
+		t,
+		() => calculateFromBPMPerMeasure([], [], null, 0),
+		"Should throw if measures is 0"
+	);
+	ThrowsToSnapshot(
+		t,
+		() => calculateFromBPMPerMeasure([], [], null, 1),
+		"Should throw if measures is 1"
+	);
+	ThrowsToSnapshot(
+		t,
+		() => calculateFromBPMPerMeasure([], [], null, -1),
+		"Should throw if measures is negative"
+	);
 
 	t.end();
 });
