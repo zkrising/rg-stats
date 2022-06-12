@@ -34,6 +34,7 @@ nav:
                 - "algorithms/volforce.md"
                 - "algorithms/popn-classpoints.md"
                 - "algorithms/poyashi-bpi.md"
+                - "algorithms/itg-highest-unbroken.md"
 
 markdown_extensions:
     - admonition
