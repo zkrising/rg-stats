@@ -28,7 +28,7 @@ export function calculateFromNPSPerMeasure(
 ): number | null {
 	// Implementation note: Measures of 1 is annoying to handle, and nobody should
 	// ever want to calculate that because it's stupid. Just gonna not allow it.
-	ThrowIf(measures < 1, `Measures must be greater than 1`, { measures });
+	ThrowIf(measures <= 1, `Measures must be greater than 1`, { measures });
 	ThrowIf(
 		npsPerMeasure.length !== notesPerMeasure.length,
 		`Notes Per Measure and NPS Per Measure didn't have the same length.`,
@@ -110,8 +110,8 @@ interface Candidate {
 export function calculateFromBPMPerMeasure(
 	bpmPerMeasure: Array<number>,
 	notesPerMeasure: Array<number>,
-	diedAt: null | number = null,
-	measures = 32
+	diedAt?: null | number,
+	measures?: number
 ): number | null {
 	return calculateFromNPSPerMeasure(
 		bpmPerMeasure.map(bpmToNPS),

@@ -69,10 +69,10 @@ This is a thin wrapper function that converts BPM input into NPS input -- for ex
  *
  * {@see calculateFromNPSPerMeasure}
  */
-export function calculateFromBPMPerMeasure(
+function calculateFromBPMPerMeasure(
 	bpmPerMeasure: Array<number>,
 	notesPerMeasure: Array<number>,
-	diedAt: null | number = null,
-	measures = 32
-): number | null
+	diedAt?: null | number,
+	measures?: number
+)
 ```
