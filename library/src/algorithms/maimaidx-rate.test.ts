@@ -36,6 +36,7 @@ t.test("maimai DX Rate Tests", (t) => {
 		MakeTestCase(70, 14.2, 111),
 		MakeTestCase(60, 15, 86),
 		MakeTestCase(50, 12.6, 50),
+		MakeTestCase(12, 12.6, 7),
 	];
 
 	for (const testCase of testCases) {
@@ -44,7 +45,11 @@ t.test("maimai DX Rate Tests", (t) => {
 
 	// Other weird algorithm quirks.
 
-	t.equal(calculate(100.5, 13), calculate(101, 13), "101% and 100% should give identical rates.");
+	t.equal(
+		calculate(100.5, 13),
+		calculate(101, 13),
+		"101% and 100.5% should give identical rates."
+	);
 
 	t.end();
 });
@@ -84,6 +89,7 @@ t.test("maimai DX Inverse Rate Tests", (t) => {
 		MakeTestCase(70, 14.2, 111),
 		MakeTestCase(60, 15, 86),
 		MakeTestCase(50, 12.6, 50),
+		MakeTestCase(12, 12.6, 7),
 	];
 
 	for (const testCase of testCases) {
