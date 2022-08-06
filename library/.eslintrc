@@ -79,7 +79,7 @@
 		"no-useless-concat": "error",
 		"radix": "error",
 		"no-octal-escape": "error",
-		"no-param-reassign": "error",
+		"no-param-reassign": "off",
 		"no-proto": "error",
 		"no-return-await": "error",
 		"no-throw-literal": "error",
