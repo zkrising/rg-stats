@@ -262,14 +262,12 @@ const testCases = [
 t.test("Jubility Tests", (t) => {
 	function MakeTestCase(rate: number, level: number, jubility: number): TestCase {
 		return (t) =>
-			isAprx(
-				t,
+			t.equal(
 				// note: score doesn't actually matter, it's just there to check
 				// that your score isn't < 700k.
 				calculate(700_001, rate, level),
 				jubility,
-				`${rate}% on a level ${level} chart should be worth ${jubility} jubility.`,
-				1
+				`${rate}% on a level ${level} chart should be worth ${jubility} jubility.`
 			);
 	}
 

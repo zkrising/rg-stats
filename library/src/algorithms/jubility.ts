@@ -1,3 +1,4 @@
+import { FloorToNDP, RoundToNDP } from "../util/math";
 import { ThrowIf } from "../util/throw-if";
 
 /**
@@ -19,8 +20,16 @@ export function calculate(score: number, musicRate: number, level: number) {
 		return 0;
 	}
 
+	// MusicRate is *always* floored to one decimal place, aswell.
+	// because, of course it is.
+
+	const flooredMusicRate = FloorToNDP(musicRate, 1);
+
 	// Note: These constants are arbitrary. I have no idea why they're like this.
-	return level * 12.5 * (musicRate / 99);
+	const jub = level * 12.5 * (flooredMusicRate / 99);
+
+	// Jubility is *always* floored to one decimal place.
+	return FloorToNDP(jub, 1);
 }
 
 /**
