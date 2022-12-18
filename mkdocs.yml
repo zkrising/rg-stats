@@ -35,6 +35,7 @@ nav:
                 - "algorithms/popn-classpoints.md"
                 - "algorithms/poyashi-bpi.md"
                 - "algorithms/itg-highest-unbroken.md"
+                - "algorithms/curator-skill.md"
 
 markdown_extensions:
     - admonition
