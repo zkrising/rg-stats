@@ -171,7 +171,8 @@ export function inverseVF6(
 		level,
 	});
 
-	return score;
+	// guaranteed to not be null
+	return score!;
 }
 
 /**
