@@ -7,7 +7,6 @@ import { ThrowIf } from "../util/throw-if";
  * @param score - The score to calculate the rate for.
  * @param internalChartLevel - The internal decimal level of the chart the score was achieved on.
  */
-
 export function calculate(score: number, internalChartLevel: number) {
 	ThrowIf(score > 101, "Score cannot be greater than 101%.", { score });
 	ThrowIf.negative(score, "Score cannot be negative.", { score });
