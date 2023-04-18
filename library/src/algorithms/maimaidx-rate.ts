@@ -40,7 +40,7 @@ export function calculate(score: number, internalChartLevel: number) {
 		level: internalChartLevel,
 	});
 
-	// Scores above SSS+ are capped at 100.5%
+	// Scores above 100.5% are capped at 100.5% by the algorithm.
 	score = Math.min(score, 100.5);
 
 	for (const [scoreBoundary, coefficient] of RATING_COEFFICIENTS) {
