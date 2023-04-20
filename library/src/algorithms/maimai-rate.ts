@@ -1,6 +1,76 @@
 import { FloorToNDP } from "../util/math";
 import { ThrowIf } from "../util/throw-if";
 
+// [F, E, D, C, B, A, AA, AAA, S - 0.01, S, SS - 0.01, SS, SSS - 0.01, SSS, SSS+]
+const RATE_TABLE: Record<number, number[]> = {
+	0: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+	1: [0, 0, 0.1, 0.2, 0.4, 1, 1.5, 2.5, 4, 4, 5, 5.5, 6.5, 7, 8],
+	2: [0, 0, 0.2, 0.4, 0.8, 2, 2.5, 3, 4.5, 4.5, 5.5, 6, 7, 7.5, 8.5],
+	3: [0, 0, 0.3, 0.6, 1.2, 3, 3.5, 4, 5, 5, 6, 6.5, 7.5, 8, 9],
+	4: [0, 0, 0.4, 0.8, 1.6, 3.5, 4, 4.5, 5.5, 5.5, 6.5, 7, 8, 8.5, 9.5],
+	5: [0, 0, 0.5, 1, 2, 4, 5, 5.5, 6, 6, 7, 7.5, 8.5, 9, 10],
+	6: [0, 0, 0.6, 1.2, 2.4, 4.5, 5.5, 6, 6.5, 6.5, 7.5, 8, 9, 9.5, 10.5],
+	7: [0, 0, 0.7, 1.4, 2.8, 5, 6, 7, 7.25, 7.5, 8.75, 9, 9.75, 10, 11],
+	8: [0, 0, 0.8, 1.6, 3.2, 5.5, 6.5, 7.25, 7.5, 8, 9.25, 9.5, 10.25, 10.5, 11.5],
+	9: [0, 0, 0.9, 1.8, 3.6, 6, 7, 7.5, 8, 9, 10.25, 10.5, 11.25, 11.5, 12.5],
+	10: [0, 0, 1, 2, 4, 7, 8, 8.5, 9, 10, 11.25, 11.5, 12.25, 12.5, 13.5],
+	11: [0, 0, 1.1, 2.2, 4.4, 8, 9, 9.5, 10, 11, 11.75, 12, 12.75, 13, 14],
+	12: [0, 0, 1.2, 2.4, 4.8, 9, 10, 10.5, 11, 12, 12.75, 13, 13.75, 14, 15],
+	13: [0, 0, 1.3, 2.6, 5.2, 10, 11, 11.5, 12.5, 13.5, 14.75, 15, 15.75, 16, 17],
+	14: [0, 0, 1.4, 2.8, 5.6, 11, 12, 12.5, 14, 15, 16.75, 17, 17.75, 18, 19],
+	15: [0, 0, 1.5, 3, 6, 12, 13, 13.5, 15.5, 16.5, 18.75, 19, 19.75, 20, 21],
+};
+
+const RANK_BOUNDARIES: Record<string, number> = {
+	F: 0,
+	E: 10,
+	D: 20,
+	C: 40,
+	B: 60,
+	A: 80,
+	AA: 90,
+	AAA: 94,
+	"S-": 96.99,
+	S: 97,
+	"SS-": 98.99,
+	SS: 99,
+	"SSS-": 99.99,
+	SSS: 100,
+	"SSS+": 104,
+};
+
+function getRank(score: number): keyof typeof RANK_BOUNDARIES {
+	for (const [rank, boundary] of Object.entries(RANK_BOUNDARIES).reverse()) {
+		if (score >= boundary) {
+			return rank;
+		}
+	}
+	return "F";
+}
+
+function calculateCurve(internalChartLevel: number): number[] {
+	let lower = Math.floor(internalChartLevel);
+	let upper = Math.ceil(internalChartLevel);
+
+	// extrapolate for levels beyond 15
+	if (internalChartLevel > 15) {
+		lower = 14;
+		upper = 15;
+	}
+
+	if (lower === upper) {
+		return RATE_TABLE[lower];
+	}
+
+	const lowerCurve = RATE_TABLE[lower];
+	const upperCurve = RATE_TABLE[upper];
+
+	return lowerCurve.map((value, index) => {
+		const upperValue = upperCurve[index];
+		return value + (upperValue - value) * (internalChartLevel - lower);
+	});
+}
+
 /**
  * Calculates maimai rate for a score.
  *
@@ -18,109 +88,24 @@ export function calculate(score: number, maxScore: number, internalChartLevel: n
 		level: internalChartLevel,
 	});
 
-	let rating = 0;
-
-	const ratingBase = calculateRatingBase(internalChartLevel);
-	const ratingForS = calculateRatingForS(internalChartLevel);
-	const ratingForSS = calculateRatingForSS(internalChartLevel);
-
-	if (score >= 100) {
-		rating = calculateRating(ratingForSS + 1, ratingForSS + 2, maxScore - 100, score - 100);
-	} else if (score >= 99) {
-		rating = calculateRating(ratingForSS, ratingForSS + 0.75, 1, score - 99);
-	} else if (score >= 97) {
-		rating = calculateRating(ratingForS, ratingForSS - 0.25, 2, score - 97);
-	} else if (internalChartLevel < 9) {
-		// According to https://sgimera.github.io/mai_RatingAnalyzer/scripts_maimai/calc_rating.js
-		// anything below 97% on charts below level 9 gives 0 rating, though it is not tested fully.
-		rating = 0;
-	} else if (score >= 94) {
-		// According to https://sgimera.github.io/mai_RatingAnalyzer/rating_finale.html
-		// everything below this point has not been verified. This is the only source
-		// I could find that had any information on the rating algorithm anyways.
-		rating = calculateRating(ratingBase - 1.5, ratingForS - 1, 3, score - 94);
-	} else if (score >= 90) {
-		rating = calculateRating(ratingBase - 2, ratingBase - 1.5, 4, score - 90);
-	} else if (score >= 80) {
-		rating = calculateRating(ratingBase - 3, ratingBase - 2, 10, score - 80);
-	} else if (score >= 60) {
-		rating = calculateRating(ratingBase * 0.4, ratingBase - 3, 20, score - 60);
-	} else if (score >= 40) {
-		rating = calculateRating(ratingBase * 0.2, ratingBase * 0.4, 20, score - 40);
-	} else if (score >= 20) {
-		rating = calculateRating(ratingBase * 0.1, ratingBase * 0.2, 20, score - 20);
-	} else if (score >= 10) {
-		rating = calculateRating(0, ratingBase * 0.1, 10, score - 10);
+	if (score <= 10) {
+		return 0;
 	}
 
-	return FloorToNDP(rating, 2);
-}
-
-/**
- * Calculates the rating achieved for a given score range.
- * @param min - The minimum rating achievable in the range.
- * @param max - The maximum rating achievable in the range.
- * @param gapToNextRank - The gap between the minimum score for this range and the next range.
- * @param distanceFromCurrentRank - The distance from the minimum score for this range to the score achieved.
- */
-function calculateRating(
-	min: number,
-	max: number,
-	gapToNextRank: number,
-	distanceFromCurrentRank: number
-): number {
-	if (gapToNextRank === 0) {
-		return min;
+	const curve = calculateCurve(internalChartLevel);
+	if (score === maxScore) {
+		return curve[curve.length - 1];
 	}
-	return min + ((max - min) * distanceFromCurrentRank) / gapToNextRank;
-}
 
-/**
- * Calculates the base rating for a chart level.
- * @param internalChartLevel - The internal decimal level of the chart the score was achieved on.
- */
-function calculateRatingBase(internalChartLevel: number): number {
-	const displayLevel = Math.floor(internalChartLevel);
+	const rank = getRank(score);
+	const rankIndex = Object.keys(RANK_BOUNDARIES).indexOf(rank);
 
-	if (displayLevel >= 8) {
-		return internalChartLevel;
-	} else {
-		return internalChartLevel / 2 + 4;
-	}
-}
+	const lower = curve[rankIndex];
+	const upper = curve[rankIndex + 1];
+	const lowerBoundary = RANK_BOUNDARIES[rank];
+	const upperBoundary = Object.values(RANK_BOUNDARIES)[rankIndex + 1];
+	const rate =
+		lower + (upper - lower) * ((score - lowerBoundary) / (upperBoundary - lowerBoundary));
 
-/**
- * Calculates the rating achieved when score is exactly 97% (S rank).
- * @param internalChartLevel - The internal decimal level of the chart the score was achieved on.
- */
-function calculateRatingForS(internalChartLevel: number): number {
-	const displayLevel = Math.floor(internalChartLevel);
-
-	if (displayLevel >= 12) {
-		return (internalChartLevel * 3) / 2 - 6;
-	} else if (displayLevel === 7) {
-		return internalChartLevel / 2 + 4;
-	} else {
-		return internalChartLevel;
-	}
-}
-
-/**
- * Calculates the rating achieved when score is exactly 99% (SS rank).
- * @param internalChartLevel - The internal decimal level of the chart the score was achieved on.
- */
-function calculateRatingForSS(internalChartLevel: number): number {
-	const displayLevel = Math.floor(internalChartLevel);
-
-	if (displayLevel >= 12) {
-		return internalChartLevel * 2 - 11;
-	} else if (displayLevel === 11) {
-		return internalChartLevel + 1;
-	} else if (displayLevel === 10) {
-		return internalChartLevel / 2 + 6.5;
-	} else if (displayLevel >= 8) {
-		return internalChartLevel + 1.5;
-	} else {
-		return internalChartLevel / 2 + 5.5;
-	}
+	return FloorToNDP(rate, 2);
 }

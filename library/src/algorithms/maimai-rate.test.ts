@@ -44,8 +44,8 @@ t.test("maimai Rate Tests", (t) => {
 		MakeTestCase(13, 100.61, 11.7, 0.35),
 		MakeTestCase(9, 100.26, 10.5, 0),
 
-		MakeTestCase(100, 100, 13.9, 17.8),
-		MakeTestCase(96.99, 100, 8.9, 0),
+		MakeTestCase(100, 100, 13.9, 18.8),
+		MakeTestCase(96.99, 100, 8.9, 7.95),
 	];
 
 	for (const testCase of testCases) {
@@ -66,16 +66,8 @@ t.test("maimai Rate Validation Tests", (t) => {
 		() => calculate(101.5, 100.68, 10),
 		"Should throw if score is greater than max score."
 	);
-	ThrowsToSnapshot(
-		t,
-		() => calculate(-1, 100.68, 10),
-		"Should throw if score is negative."
-	);
-	ThrowsToSnapshot(
-		t,
-		() => calculate(99.5, 100.68, -1),
-		"Should throw if level is negative."
-	);
+	ThrowsToSnapshot(t, () => calculate(-1, 100.68, 10), "Should throw if score is negative.");
+	ThrowsToSnapshot(t, () => calculate(99.5, 100.68, -1), "Should throw if level is negative.");
 
 	t.end();
 });
