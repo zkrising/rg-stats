@@ -39,13 +39,14 @@ const RANK_BOUNDARIES: Record<string, number> = {
 	"SSS+": 104,
 };
 
+// @ts-expect-error getRank is called after the score is checked for validity
+// (between 0 and 104), so not having an ending return statement is OK.
 function getRank(score: number): keyof typeof RANK_BOUNDARIES {
 	for (const [rank, boundary] of Object.entries(RANK_BOUNDARIES).reverse()) {
 		if (score >= boundary) {
 			return rank;
 		}
 	}
-	return "F";
 }
 
 function calculateCurve(internalChartLevel: number): number[] {
