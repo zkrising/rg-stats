@@ -16,8 +16,10 @@ export function calculate(score: number, internalChartLevel: number) {
 
 	let val = 0;
 
-	if (score >= 1_007_500) {
-		val = levelBase + 200;
+	if (score >= 1_009_000) {
+		val = levelBase + 215;
+	} else if (score >= 1_007_500) {
+		val = levelBase + 200 + (score - 1_007_500) / 100;
 	} else if (score >= 1_005_000) {
 		val = levelBase + 150 + ((score - 1_005_000) * 10) / 500;
 	} else if (score >= 1_000_000) {

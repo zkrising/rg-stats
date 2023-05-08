@@ -6,7 +6,8 @@ t.test("CHUNITHM Rating Tests", (t) => {
 	// Test all the cutoffs for a random chart level
 	// are where they should be.
 	const LEVEL = 12.5;
-	t.equal(calculate(1_010_000, LEVEL), LEVEL + 2);
+	t.equal(calculate(1_010_000, LEVEL), LEVEL + 2.15);
+	t.equal(calculate(1_007_500, LEVEL), LEVEL + 2);
 	t.equal(calculate(1_005_000, LEVEL), LEVEL + 1.5);
 	t.equal(calculate(1_000_000, LEVEL), LEVEL + 1);
 	t.equal(calculate(975_000, LEVEL), LEVEL);
@@ -18,7 +19,7 @@ t.test("CHUNITHM Rating Tests", (t) => {
 	// Also, lets just test some random values inbetween. This should
 	// give us decent coverage of the formula.
 	t.equal(calculate(987_000, LEVEL), 12.98);
-	t.equal(calculate(1_008_000, LEVEL), 14.5);
+	t.equal(calculate(1_008_000, LEVEL), 14.55);
 	t.equal(calculate(1_003_000, LEVEL), 13.8);
 	t.equal(calculate(999_000, LEVEL), 13.46);
 	t.equal(calculate(980_000, LEVEL), 12.7);
@@ -33,8 +34,8 @@ t.test("CHUNITHM Rating Tests", (t) => {
 t.test("CHUNITHM Rating Edge Cases", (t) => {
 	t.equal(
 		calculate(1_010_000, 0),
-		2,
-		"A perfect score on a chart with level 0 should be valid, and worth 0 + 2."
+		2.15,
+		"A perfect score on a chart with level 0 should be valid, and worth 0 + 2.15."
 	);
 	t.equal(calculate(0, 12.5), 0, "A score of 0 should be worth 0.");
 	t.equal(calculate(0, 0), 0, "A score of 0 on a chart with level 0 should be worth 0.");
