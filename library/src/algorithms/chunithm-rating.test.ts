@@ -14,6 +14,7 @@ t.test("CHUNITHM Rating Tests", (t) => {
 	t.equal(calculate(925_000, LEVEL), LEVEL - 3);
 	t.equal(calculate(900_000, LEVEL), LEVEL - 5);
 	t.equal(calculate(800_000, LEVEL), 3.75);
+	t.equal(calculate(500_000, LEVEL), 0);
 	t.equal(calculate(0, LEVEL), 0);
 
 	// Also, lets just test some random values inbetween. This should
@@ -26,6 +27,7 @@ t.test("CHUNITHM Rating Tests", (t) => {
 	t.equal(calculate(950_000, LEVEL), 11);
 	t.equal(calculate(920_000, LEVEL), 9.1);
 	t.equal(calculate(810_000, LEVEL), 4.12);
+	t.equal(calculate(600_000, LEVEL), 1.25);
 	t.equal(calculate(50_000, LEVEL), 0);
 
 	t.end();

@@ -32,6 +32,8 @@ export function calculate(score: number, internalChartLevel: number) {
 		val = levelBase - 500 + ((score - 900_000) * 4) / 500;
 	} else if (score >= 800_000) {
 		val = (levelBase - 500) / 2 + ((score - 800_000) * ((levelBase - 500) / 2)) / 100_000;
+	} else if (score >= 500_000) {
+		val = (((levelBase - 500) / 2) * (score - 500_000)) / 300_000;
 	}
 
 	return Math.max(Math.floor(val) / 100, 0);
