@@ -24,19 +24,28 @@ t.test("maimai DX Rate Tests", (t) => {
 
 		// General boundary checks
 		MakeTestCase(100.5, 13, 292),
+		MakeTestCase(100.4999, 14, 312),
 		MakeTestCase(100, 13, 280),
+		MakeTestCase(99.9999, 13.7, 293),
 		MakeTestCase(99.5, 13.7, 287),
 		MakeTestCase(99, 12.7, 261),
+		MakeTestCase(98.9999, 12.9, 263),
 		MakeTestCase(98, 10, 198),
 		MakeTestCase(97, 8, 155),
+		MakeTestCase(96.9999, 10.7, 182),
 		MakeTestCase(94, 10.7, 168),
 		MakeTestCase(90, 5, 68),
 		MakeTestCase(80, 11.5, 125),
+		MakeTestCase(79.9999, 11.5, 117),
 		MakeTestCase(75, 12.4, 111),
 		MakeTestCase(70, 14.2, 111),
 		MakeTestCase(60, 15, 86),
 		MakeTestCase(50, 12.6, 50),
-		MakeTestCase(12, 12.6, 7),
+		MakeTestCase(40, 12.6, 32),
+		MakeTestCase(30, 12.6, 18),
+		MakeTestCase(20, 12.6, 8),
+		MakeTestCase(10, 12.6, 2),
+		MakeTestCase(0, 12.6, 0),
 	];
 
 	for (const testCase of testCases) {
