@@ -5,14 +5,6 @@
  * Make sure to inspect the output below.  Do not ignore changes!
  */
 'use strict'
-exports[`src/algorithms/maimaidx-rate.test.ts TAP maimai DX Inverse Rate Validation Tests > Should throw if level is negative. 1`] = `
-Invalid input, Internal chart level cannot be negative. level=-1.
-`
-
-exports[`src/algorithms/maimaidx-rate.test.ts TAP maimai DX Inverse Rate Validation Tests > Should throw if rate is impossible. 1`] = `
-Invalid input, A rate of 100 is not possible on a chart of level 1. rate=100, level=1.
-`
-
 exports[`src/algorithms/maimaidx-rate.test.ts TAP maimai DX Rate Validation Tests > Should throw if level is negative. 1`] = `
 Invalid input, Internal chart level cannot be negative. level=-1.
 `
