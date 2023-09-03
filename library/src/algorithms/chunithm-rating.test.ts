@@ -11,7 +11,6 @@ t.test("CHUNITHM Rating Tests", (t) => {
 	t.equal(calculate(1_005_000, LEVEL), LEVEL + 1.5);
 	t.equal(calculate(1_000_000, LEVEL), LEVEL + 1);
 	t.equal(calculate(975_000, LEVEL), LEVEL);
-	t.equal(calculate(925_000, LEVEL), LEVEL - 3);
 	t.equal(calculate(900_000, LEVEL), LEVEL - 5);
 	t.equal(calculate(800_000, LEVEL), 3.75);
 	t.equal(calculate(500_000, LEVEL), 0);
@@ -24,8 +23,7 @@ t.test("CHUNITHM Rating Tests", (t) => {
 	t.equal(calculate(1_003_000, LEVEL), 13.8);
 	t.equal(calculate(999_000, LEVEL), 13.46);
 	t.equal(calculate(980_000, LEVEL), 12.7);
-	t.equal(calculate(950_000, LEVEL), 11);
-	t.equal(calculate(920_000, LEVEL), 9.1);
+	t.equal(calculate(950_000, LEVEL), 10.83);
 	t.equal(calculate(810_000, LEVEL), 4.12);
 	t.equal(calculate(600_000, LEVEL), 1.25);
 	t.equal(calculate(50_000, LEVEL), 0);

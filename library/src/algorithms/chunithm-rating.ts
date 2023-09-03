@@ -2,7 +2,7 @@ import { ThrowIf } from "../util/throw-if";
 
 /**
  * Calculates the rating for a CHUNITHM score.
- * This is accurate up to PARADISE LOST.
+ * This is accurate up to SUN.
  *
  * @param score - The score the user got. This is a value between 0 and 1.01million.
  * @param internalChartLevel - The internal chart level. This is a decimal value stored by the game internally.
@@ -26,10 +26,8 @@ export function calculate(score: number, internalChartLevel: number) {
 		val = levelBase + 100 + ((score - 1_000_000) * 5) / 500;
 	} else if (score >= 975_000) {
 		val = levelBase + ((score - 975_000) * 2) / 500;
-	} else if (score >= 925_000) {
-		val = levelBase - 300 + ((score - 925_000) * 3) / 500;
 	} else if (score >= 900_000) {
-		val = levelBase - 500 + ((score - 900_000) * 4) / 500;
+		val = levelBase - 500 + ((score - 900_000) * 2) / 300;
 	} else if (score >= 800_000) {
 		val = (levelBase - 500) / 2 + ((score - 800_000) * ((levelBase - 500) / 2)) / 100_000;
 	} else if (score >= 500_000) {
