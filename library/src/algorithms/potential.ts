@@ -20,13 +20,9 @@ export function calculate(score: number, internalChartLevel: number) {
 		return FloorToNDP(internalChartLevel + 2.0, 2);
 	} else if (score >= 9_800_000) {
 		return FloorToNDP(internalChartLevel + (1.0 + (score - 9_800_000) / 200_000), 2);
-	} else {
-		const potential = FloorToNDP(internalChartLevel + (score - 9_500_000) / 300_000, 2);
-
-		return Math.max(potential, 0);
 	}
 
-	// should be impossible as score cannot be negative and the lowest boundary is >= 0.
-	/* istanbul ignore next */
-	throw new Error(`Unresolvable score of ${score}.`);
+	const potential = FloorToNDP(internalChartLevel + (score - 9_500_000) / 300_000, 2);
+
+	return Math.max(potential, 0);
 }
