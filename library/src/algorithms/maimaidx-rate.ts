@@ -36,23 +36,16 @@ const RATING_COEFFICIENTS = new Map([
 export function calculate(score: number, internalChartLevel: number) {
 	ThrowIf(score > 101, "Score cannot be greater than 101%.", { score });
 	ThrowIf.negative(score, "Score cannot be negative.", { score });
-	ThrowIf.negative(
-		internalChartLevel,
-		"Internal chart level cannot be negative.",
-		{
-			level: internalChartLevel,
-		}
-	);
+	ThrowIf.negative(internalChartLevel, "Internal chart level cannot be negative.", {
+		level: internalChartLevel,
+	});
 
 	// Scores above 100.5% are capped at 100.5% by the algorithm.
 	score = Math.min(score, 100.5);
 
 	for (const [scoreBoundary, coefficient] of RATING_COEFFICIENTS) {
 		if (score >= scoreBoundary) {
-			return FloorToNDP(
-				internalChartLevel * coefficient * (score / 100),
-				0
-			);
+			return FloorToNDP(internalChartLevel * coefficient * (score / 100), 0);
 		}
 	}
 
