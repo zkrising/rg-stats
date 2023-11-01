@@ -9,6 +9,7 @@ t.test("O.N.G.E.K.I. Rating Tests", (t) => {
 	t.equal(calculate(1_010_000, LEVEL), LEVEL + 2);
 	t.equal(calculate(1_007_500, LEVEL), LEVEL + 2);
 	t.equal(calculate(1_000_000, LEVEL), LEVEL + 1.5);
+	t.equal(calculate(990_000, LEVEL), LEVEL + 1);
 	t.equal(calculate(970_000, LEVEL), LEVEL);
 	t.equal(calculate(900_000, LEVEL), LEVEL - 4);
 	t.equal(calculate(800_000, LEVEL), 2.78);
@@ -20,6 +21,7 @@ t.test("O.N.G.E.K.I. Rating Tests", (t) => {
 	t.equal(calculate(987_000, LEVEL), 13.35);
 	t.equal(calculate(1_003_000, LEVEL), 14.2);
 	t.equal(calculate(999_000, LEVEL), 13.95);
+	t.equal(calculate(994_000, LEVEL), 13.7);
 	t.equal(calculate(980_000, LEVEL), 13);
 	t.equal(calculate(950_000, LEVEL), 11.35);
 	t.equal(calculate(810_000, LEVEL), 3.35);
