@@ -1,4 +1,3 @@
-import { FloorToNDP } from "../util/math";
 import { ThrowIf } from "../util/throw-if";
 
 /**
@@ -16,16 +15,17 @@ export function calculate(technicalScore: number, internalChartLevel: number) {
 	ThrowIf.negative(internalChartLevel, "Chart level cannot be negative.", { internalChartLevel });
 
 	let ratingValue = 0;
+	const iclInt = Math.round(internalChartLevel * 100.0);
 
 	if (technicalScore >= 1_007_500) {
-		ratingValue = internalChartLevel + 2;
+		ratingValue = iclInt + 200;
 	} else if (technicalScore >= 1_000_000) {
-		ratingValue = internalChartLevel + 1.5 + (technicalScore - 1_000_000) / 15_000;
+		ratingValue = iclInt + 150 + Math.floor((technicalScore - 1_000_000) / 150);
 	} else if (technicalScore >= 970_000) {
-		ratingValue = internalChartLevel + (technicalScore - 970_000) / 20_000;
+		ratingValue = iclInt + Math.floor((technicalScore - 970_000) / 200);
 	} else {
-		ratingValue = internalChartLevel - (970_000 - technicalScore) / 17_500;
+		ratingValue = iclInt - Math.ceil((970_000 - technicalScore) / 175);
 	}
 
-	return FloorToNDP(Math.max(ratingValue, 0), 2);
+	return Math.max(ratingValue / 100.0, 0);
 }

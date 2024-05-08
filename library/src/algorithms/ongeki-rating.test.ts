@@ -39,6 +39,7 @@ t.test("O.N.G.E.K.I. Rating Edge Cases", (t) => {
 	);
 	t.equal(calculate(0, 12.5), 0, "A score of 0 should be worth 0.");
 	t.equal(calculate(0, 0), 0, "A score of 0 on a chart with level 0 should be worth 0.");
+	t.equal(calculate(1_007_880, 14.4), 16.4, "An SSS+ on a 14.4 should be worth 16.4.")
 
 	t.end();
 });
