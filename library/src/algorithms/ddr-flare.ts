@@ -1,8 +1,8 @@
-import {ThrowIf} from "../util/throw-if";
+import { ThrowIf } from "../util/throw-if";
 
 const FLARE_0_POINTS = [
 	145, 155, 170, 185, 205, 230, 255, 290, 335, 400, 465, 510, 545, 575, 600, 620, 635, 650, 665,
-]
+];
 
 /**
  * Calculate DDR Flare for a score.
@@ -24,5 +24,5 @@ export function calculate(internalChartLevel: number, flareLevel: number) {
 		level: flareLevel,
 	});
 
-	return Math.floor(FLARE_0_POINTS[internalChartLevel - 1]! * (100 + flareLevel * 6) / 100);
+	return Math.floor((FLARE_0_POINTS[internalChartLevel - 1]! * (100 + flareLevel * 6)) / 100);
 }
