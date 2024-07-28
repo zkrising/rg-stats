@@ -11,3 +11,4 @@ export * as CuratorSkill from "./algorithms/curator-skill";
 export * as MaimaiRate from "./algorithms/maimai-rate";
 export * as Potential from "./algorithms/potential";
 export * as ONGEKIRating from "./algorithms/ongeki-rating";
+export * as DDRFlare from "./algorithms/ddr-flare";
