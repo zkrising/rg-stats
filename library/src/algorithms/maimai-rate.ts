@@ -113,5 +113,5 @@ export function calculate(score: number, maxScore: number, internalChartLevel: n
 	const rate =
 		lower + (upper - lower) * ((scoreInt - lowerBoundary) / (upperBoundary - lowerBoundary));
 
-	return rate / 100;
+	return Math.floor(rate) / 100;
 }

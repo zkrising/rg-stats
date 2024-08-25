@@ -21,6 +21,13 @@ t.test("maimai Rate Tests", (t) => {
 	}
 
 	const testCases = [
+		// Assertions plucked from a random user account
+		MakeTestCase(98.04, 101.21, 10.2, 10.8),
+		MakeTestCase(91.62, 100.5, 11.7, 9.9),
+		MakeTestCase(93.05, 100.31, 11.5, 9.88),
+		MakeTestCase(96.79, 101.19, 10.8, 9.76),
+		MakeTestCase(95.08, 100.91, 10.5, 9.18),
+
 		// General boundary checks
 		MakeTestCase(100.68, 100.68, 14, 19),
 		MakeTestCase(100, 100.79, 13.9, 17.8),
