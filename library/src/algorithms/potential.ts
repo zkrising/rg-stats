@@ -1,4 +1,3 @@
-import { FloorToNDP } from "../util/math";
 import { ThrowIf } from "../util/throw-if";
 
 /**
@@ -13,16 +12,16 @@ export function calculate(score: number, internalChartLevel: number) {
 		level: internalChartLevel,
 	});
 
-	// Scores above 10,000,000 are capped to 10,000,000 by the algorithm.
-	score = Math.min(score, 10_000_000);
+	const iclInt = Math.round(internalChartLevel * 100);
+	let potential = 0;
 
 	if (score >= 10_000_000) {
-		return FloorToNDP(internalChartLevel + 2.0, 2);
+		potential = iclInt + 200;
 	} else if (score >= 9_800_000) {
-		return FloorToNDP(internalChartLevel + (1.0 + (score - 9_800_000) / 200_000), 2);
+		potential = iclInt + 100 + Math.floor((score - 9_800_000) / 2_000);
+	} else {
+		potential = iclInt + Math.floor((score - 9_500_000) / 3_000);
 	}
 
-	const potential = FloorToNDP(internalChartLevel + (score - 9_500_000) / 300_000, 2);
-
-	return Math.max(potential, 0);
+	return Math.max(potential / 100, 0);
 }

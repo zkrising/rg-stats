@@ -1,29 +1,28 @@
-import { FloorToNDP } from "../util/math";
 import { ThrowIf } from "../util/throw-if";
 
 const RATING_COEFFICIENTS = new Map([
-	[100.5, 22.4],
-	[100.4999, 22.2],
-	[100, 21.6],
-	[99.9999, 21.4],
-	[99.5, 21.1],
-	[99, 20.8],
-	[98.9999, 20.6],
-	[98, 20.3],
-	[97, 20],
-	[96.9999, 17.6],
-	[94, 16.8],
-	[90, 15.2],
-	[80, 13.6],
-	[79.9999, 12.8],
-	[75, 12],
-	[70, 11.2],
-	[60, 9.6],
-	[50, 8],
-	[40, 6.4],
-	[30, 4.8],
-	[20, 3.2],
-	[10, 1.6],
+	[100_5000, 224],
+	[100_4999, 222],
+	[100_0000, 216],
+	[99_9999, 214],
+	[99_5000, 211],
+	[99_0000, 208],
+	[98_9999, 206],
+	[98_0000, 203],
+	[97_0000, 200],
+	[96_9999, 176],
+	[94_0000, 168],
+	[90_0000, 152],
+	[80_0000, 136],
+	[79_9999, 128],
+	[75_0000, 120],
+	[70_0000, 112],
+	[60_0000, 96],
+	[50_0000, 80],
+	[40_0000, 64],
+	[30_0000, 48],
+	[20_0000, 32],
+	[10_0000, 16],
 	[0, 0],
 ]);
 
@@ -41,11 +40,12 @@ export function calculate(score: number, internalChartLevel: number) {
 	});
 
 	// Scores above 100.5% are capped at 100.5% by the algorithm.
-	score = Math.min(score, 100.5);
+	const scoreInt = Math.min(Math.round(score * 10000), 100_5000);
+	const iclInt = Math.round(internalChartLevel * 10);
 
 	for (const [scoreBoundary, coefficient] of RATING_COEFFICIENTS) {
-		if (score >= scoreBoundary) {
-			return FloorToNDP(internalChartLevel * coefficient * (score / 100), 0);
+		if (scoreInt >= scoreBoundary) {
+			return Math.floor((scoreInt * coefficient * iclInt) / 100_000_000);
 		}
 	}
 
