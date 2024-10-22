@@ -19,6 +19,10 @@ t.test("GITADORA Skill Tests", (t) => {
 		MakeTestCase(89.48, 3.4, 60.84),
 		MakeTestCase(70.76, 5.8, 82.08),
 		MakeTestCase(40.2, 9.5, 76.38),
+
+		// This used to return 19.55 due to FloorToNDP(x, 2):
+		//    19.56 * 100 = 1955.9999999999998
+		MakeTestCase(97.8, 1, 19.56),
 	];
 
 	for (const testCase of testCases) {
