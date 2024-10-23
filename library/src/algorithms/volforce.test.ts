@@ -698,6 +698,10 @@ t.test("VF5 Tests", (t) => {
 		VF5TestCase(19, 9_500_000, "EXCESSIVE CLEAR", 0.35),
 		VF5TestCase(19, 9_500_000, "CLEAR", 0.35),
 		VF5TestCase(19, 9_500_000, "FAILED", 0.17),
+
+		// The library used to return 0.28 for this case because of FloorToNDP(x, 2):
+		//     0.29 * 100 = 28.999999999999996
+		VF5TestCase(16, 9_500_000, "CLEAR", 0.29),
 	];
 
 	for (const testCase of VF5ExampleData) {

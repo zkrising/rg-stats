@@ -1,4 +1,3 @@
-import { FloorToNDP } from "../util/math";
 import { GetEntriesAsArray } from "../util/misc";
 import { ThrowIf } from "../util/throw-if";
 import { integer } from "../util/types";
@@ -25,26 +24,26 @@ const VF4GradeCoefficients: Record<SDVXGrades, number> = {
 };
 
 const VF5GradeCoefficients: Record<SDVXGrades, number> = {
-	S: 1.05,
-	"AAA+": 1.02,
-	AAA: 1.0,
-	"AA+": 0.97,
-	AA: 0.94,
+	S: 105,
+	"AAA+": 102,
+	AAA: 100,
+	"AA+": 97,
+	AA: 94,
 	// everything below this point is marked with a (?)
 	// in bemaniwiki, so maybe it can't be trusted?
-	"A+": 0.91,
-	A: 0.88,
-	B: 0.85,
-	C: 0.82,
-	D: 0.8,
+	"A+": 91,
+	A: 88,
+	B: 85,
+	C: 82,
+	D: 80,
 };
 
 const VF5LampCoefficients: Record<SDVXLamps, number> = {
-	"PERFECT ULTIMATE CHAIN": 1.1,
-	"ULTIMATE CHAIN": 1.05,
-	"EXCESSIVE CLEAR": 1.02,
-	CLEAR: 1.0,
-	FAILED: 0.5,
+	"PERFECT ULTIMATE CHAIN": 110,
+	"ULTIMATE CHAIN": 105,
+	"EXCESSIVE CLEAR": 102,
+	CLEAR: 100,
+	FAILED: 50,
 };
 
 /**
@@ -94,9 +93,9 @@ export function inverseVF4(vf4: integer, level: integer) {
 export function calculateVF5(score: integer, lamp: SDVXLamps, level: integer) {
 	AssertProvidedScore(score);
 
-	const unroundedVF5 = CalculateUnroundedVF5(score, lamp, level);
+	const unroundedVF5 = CalculateWholeVF5(score, lamp, level);
 
-	return FloorToNDP(unroundedVF5, 2);
+	return Math.floor(unroundedVF5 / 10000) / 100;
 }
 
 /**
@@ -136,10 +135,10 @@ export function inverseVF5(
 export function calculateVF6(score: integer, lamp: SDVXLamps, level: integer) {
 	AssertProvidedScore(score);
 
-	const unroundedVF5 = CalculateUnroundedVF5(score, lamp, level);
+	const unroundedVF5 = CalculateWholeVF5(score, lamp, level);
 
 	// VF6 is just unroundedVF5 to 3 decimal places instead of 2.
-	return FloorToNDP(unroundedVF5, 3);
+	return Math.floor(unroundedVF5 / 1000) / 1000;
 }
 
 /**
@@ -180,13 +179,13 @@ export function inverseVF6(
  * is floored to 2 decimal places, wherease VF6 is floored to 3. This lets us
  * reuse the same algorithm.
  */
-function CalculateUnroundedVF5(score: integer, lamp: SDVXLamps, level: integer) {
+function CalculateWholeVF5(score: integer, lamp: SDVXLamps, level: integer) {
 	const grade = SDVXScoreToGrade(score);
 
 	const gradeCoefficient = VF5GradeCoefficients[grade];
 	const lampCoefficient = VF5LampCoefficients[lamp];
 
-	return (level * 2 * (score / 10_000_000) * gradeCoefficient * lampCoefficient) / 100;
+	return level * 2 * (score / 10_000_000) * gradeCoefficient * lampCoefficient;
 }
 
 /**
@@ -206,7 +205,7 @@ function InvertUnroundedVF5(vf5: number, lamp: SDVXLamps, level: integer) {
 
 	const lampCoefficient = VF5LampCoefficients[lamp];
 
-	const scoreTimesGradeCoef = (100 * 10_000_000 * vf5) / (2 * level * lampCoefficient);
+	const scoreTimesGradeCoef = (1_000_000 * 10_000_000 * vf5) / (2 * level * lampCoefficient);
 
 	const score = AttemptGradeCoefficientDivide(scoreTimesGradeCoef, VF5GradeCoefficients);
 
