@@ -35,7 +35,7 @@ const RANK_BOUNDARIES = {
 	SS: 9900,
 	"SSS-": 9999,
 	SSS: 10000,
-	"SSS+": 10400,
+	"SSS+": 20000,
 } as const;
 
 // @ts-expect-error getRank is called after the score is checked for validity
@@ -91,7 +91,7 @@ export function calculate(score: number, maxScore: number, internalChartLevel: n
 		level: internalChartLevel,
 	});
 
-	const scoreInt = Math.round(score * 100);
+	let scoreInt = Math.round(score * 100);
 	const maxScoreInt = Math.round(maxScore * 100);
 	const iclInt = Math.round(internalChartLevel * 10);
 
@@ -108,23 +108,23 @@ export function calculate(score: number, maxScore: number, internalChartLevel: n
 	const rank = getRank(scoreInt);
 	const rankIndex = Object.keys(RANK_BOUNDARIES).indexOf(rank);
 
-	const lowerRateValue = curve[rankIndex];
-	const upperRateValue = curve[rankIndex + 1];
-
-	let lowerScoreBoundary: number;
-	let upperScoreBoundary: number;
-
-	/* istanbul ignore next */
-	if (rank === "SSS+") {
-		throw new Error("Internal error: Achieved rank SSS+, but was not max score?");
-	} else if (rank === "SSS") {
-		lowerScoreBoundary = RANK_BOUNDARIES[rank];
-		upperScoreBoundary = maxScoreInt;
-	} else {
-		lowerScoreBoundary = RANK_BOUNDARIES[rank];
-		upperScoreBoundary = Object.values(RANK_BOUNDARIES)[rankIndex + 1];
+	// For whatever reason, rating between SSS and SSS+ is calculated by scaling
+	// the score between 100% and 200%, with the base score taking up 100% and
+	// the break score being another 100%.
+	if (rank === "SSS") {
+		scoreInt = Math.floor(((scoreInt - 10000) / (maxScoreInt - 10000)) * 10000 + 10000);
 	}
 
+	const lowerRateValue = curve[rankIndex];
+	const lowerScoreBoundary = RANK_BOUNDARIES[rank];
+
+	// Fast path: Return the rate value as-is if the score is right on the border.
+	if (scoreInt === lowerScoreBoundary) {
+		return lowerRateValue / 100;
+	}
+
+	const upperRateValue = curve[rankIndex + 1];
+	const upperScoreBoundary = Object.values(RANK_BOUNDARIES)[rankIndex + 1];
 	const rate =
 		lowerRateValue +
 		(upperRateValue - lowerRateValue) *
