@@ -1,4 +1,3 @@
-import { FloorToNDP } from "../util/math";
 import { ThrowIf } from "../util/throw-if";
 
 /**
@@ -12,9 +11,9 @@ export function calculate(scorePercent: number, level: number) {
 	ThrowIf.negative(scorePercent, "Score Percent cannot be negative.", { scorePercent });
 	ThrowIf.negative(level, "Chart Level cannot be negative.", { level });
 
-	const trueRating = (scorePercent / 100) * level * 20;
+	const trueRating = scorePercent * level * 20;
 
-	return FloorToNDP(trueRating, 2);
+	return Math.floor(trueRating) / 100;
 }
 
 /**

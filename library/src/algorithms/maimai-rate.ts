@@ -20,7 +20,7 @@ const RATE_TABLE: Record<number, number[]> = {
 	150: [0, 0, 150, 300, 600, 1200, 1300, 1350, 1550, 1650, 1875, 1900, 1975, 2000, 2100],
 };
 
-const RANK_BOUNDARIES: Record<string, number> = {
+const RANK_BOUNDARIES = {
 	F: 0,
 	E: 1000,
 	D: 2000,
@@ -35,20 +35,20 @@ const RANK_BOUNDARIES: Record<string, number> = {
 	SS: 9900,
 	"SSS-": 9999,
 	SSS: 10000,
-	"SSS+": 10400,
-};
+	"SSS+": 20000,
+} as const;
 
 // @ts-expect-error getRank is called after the score is checked for validity
 // (between 0 and 104), so not having an ending return statement is OK.
 function getRank(score: number): keyof typeof RANK_BOUNDARIES {
 	for (const [rank, boundary] of Object.entries(RANK_BOUNDARIES).reverse()) {
 		if (score >= boundary) {
-			return rank;
+			return rank as keyof typeof RANK_BOUNDARIES;
 		}
 	}
 }
 
-function calculateCurve(iclInt: number): number[] {
+function calculateRatingCurve(iclInt: number): number[] {
 	let lowerIcl = Math.floor(iclInt / 10) * 10;
 	let upperIcl = Math.ceil(iclInt / 10) * 10;
 
@@ -65,10 +65,12 @@ function calculateCurve(iclInt: number): number[] {
 	const lowerCurve = RATE_TABLE[lowerIcl];
 	const upperCurve = RATE_TABLE[upperIcl];
 
-	return lowerCurve.map((value, index) => {
-		const upperValue = upperCurve[index];
+	return lowerCurve.map((rateValue, index) => {
+		const upperRateValue = upperCurve[index];
 
-		return value + ((upperValue - value) * (iclInt - lowerIcl)) / (upperIcl - lowerIcl);
+		return (
+			rateValue + ((upperRateValue - rateValue) * (iclInt - lowerIcl)) / (upperIcl - lowerIcl)
+		);
 	});
 }
 
@@ -89,7 +91,7 @@ export function calculate(score: number, maxScore: number, internalChartLevel: n
 		level: internalChartLevel,
 	});
 
-	const scoreInt = Math.round(score * 100);
+	let scoreInt = Math.round(score * 100);
 	const maxScoreInt = Math.round(maxScore * 100);
 	const iclInt = Math.round(internalChartLevel * 10);
 
@@ -97,7 +99,7 @@ export function calculate(score: number, maxScore: number, internalChartLevel: n
 		return 0;
 	}
 
-	const curve = calculateCurve(iclInt);
+	const curve = calculateRatingCurve(iclInt);
 
 	if (scoreInt === maxScoreInt) {
 		return curve[curve.length - 1] / 100;
@@ -106,12 +108,27 @@ export function calculate(score: number, maxScore: number, internalChartLevel: n
 	const rank = getRank(scoreInt);
 	const rankIndex = Object.keys(RANK_BOUNDARIES).indexOf(rank);
 
-	const lower = curve[rankIndex];
-	const upper = curve[rankIndex + 1];
-	const lowerBoundary = RANK_BOUNDARIES[rank];
-	const upperBoundary = Object.values(RANK_BOUNDARIES)[rankIndex + 1];
+	// For whatever reason, rating between SSS and SSS+ is calculated by scaling
+	// the score between 100% and 200%, with the base score taking up 100% and
+	// the break score being another 100%.
+	if (rank === "SSS") {
+		scoreInt = Math.floor(((scoreInt - 10000) / (maxScoreInt - 10000)) * 10000 + 10000);
+	}
+
+	const lowerRateValue = curve[rankIndex];
+	const lowerScoreBoundary = RANK_BOUNDARIES[rank];
+
+	// Fast path: Return the rate value as-is if the score is right on the border.
+	if (scoreInt === lowerScoreBoundary) {
+		return lowerRateValue / 100;
+	}
+
+	const upperRateValue = curve[rankIndex + 1];
+	const upperScoreBoundary = Object.values(RANK_BOUNDARIES)[rankIndex + 1];
 	const rate =
-		lower + (upper - lower) * ((scoreInt - lowerBoundary) / (upperBoundary - lowerBoundary));
+		lowerRateValue +
+		(upperRateValue - lowerRateValue) *
+			((scoreInt - lowerScoreBoundary) / (upperScoreBoundary - lowerScoreBoundary));
 
 	return Math.floor(rate) / 100;
 }

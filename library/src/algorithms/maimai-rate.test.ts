@@ -16,17 +16,24 @@ t.test("maimai Rate Tests", (t) => {
 				t,
 				calculate(score, maxScore, level),
 				expectedRate,
-				`A score of ${score} on a chart of level ${level} should be worth ${expectedRate} rate.`
+				`A score of ${score}/${maxScore} on a chart of level ${level} should be worth ${expectedRate} rate.`
 			);
 	}
 
 	const testCases = [
 		// Assertions plucked from a random user account
+		MakeTestCase(100.89, 101.58, 11.8, 14.36),
+		MakeTestCase(100.8, 101.18, 12.0, 14.68),
+		MakeTestCase(100.23, 100.72, 11.7, 14.02),
+		MakeTestCase(99.36, 100.42, 11.0, 12.27),
 		MakeTestCase(98.04, 101.21, 10.2, 10.8),
-		MakeTestCase(91.62, 100.5, 11.7, 9.9),
-		MakeTestCase(93.05, 100.31, 11.5, 9.88),
+		MakeTestCase(97.62, 100.56, 10.1, 10.47),
 		MakeTestCase(96.79, 101.19, 10.8, 9.76),
 		MakeTestCase(95.08, 100.91, 10.5, 9.18),
+		MakeTestCase(94.16, 100.83, 12.5, 11.04),
+		MakeTestCase(93.05, 100.31, 11.5, 9.88),
+		MakeTestCase(92.5, 100.53, 13.6, 11.91),
+		MakeTestCase(91.62, 100.5, 11.7, 9.9),
 
 		// General boundary checks
 		MakeTestCase(100.68, 100.68, 14, 19),
