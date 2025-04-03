@@ -74,6 +74,22 @@ t.test("O.N.G.E.K.I. Refresh Rating Tests", (t) => {
 	t.end();
 });
 
+t.test("O.N.G.E.K.I. Refresh Rating Edge Cases", (t) => {
+	t.equal(
+		calculateRefresh(0, 1_010_000, "ALL BREAK+", true),
+		0,
+		"A perfect score on a chart with level 0 should be worth 0."
+	);
+	t.equal(calculateRefresh(12.5, 0, "LOSS", false), 0, "A score of 0 should be worth 0.");
+	t.equal(
+		calculateRefresh(0, 0, "LOSS", false),
+		0,
+		"A score of 0 on a chart with level 0 should be worth 0."
+	);
+
+	t.end();
+});
+
 t.test("O.N.G.E.K.I. Refresh Rating Real-world Tests", (t) => {
 	const testData: TestData = JSON.parse(
 		fs.readFileSync("test-data/ongeki-rating.json").toString()
